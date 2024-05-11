@@ -1,0 +1,101 @@
+﻿
+<section class="newsletter" id="newsletter">
+    <div class="container">
+        <div class="title">
+            Don't Want to Miss Anything?
+            <div class="arrows"><img src="/images/arrows.svg" alt="arrows"></div>
+        </div>
+        <EditForm method="post" FormName="subscribeform" Model="SubscribeForm" OnValidSubmit="OnValidSubmit" novalidate>
+            <div class="sign-up-checkbox">
+                <h6>Sign up for Newsletters</h6>
+                <div class="grid">
+                    <div class="checkbox">
+                        <InputCheckbox @bind-Value="SubscribeForm.DailyNewsletter" />
+                        <label>Daily Newsletter</label>
+                    </div>
+                    <div class="checkbox">
+                        <InputCheckbox  @bind-Value="SubscribeForm.AdvertisingUpdates" />
+                        <label>Advertising updates</label>
+                    </div>
+                    <div class="checkbox">
+                        <InputCheckbox  @bind-Value="SubscribeForm.WeekInReview" />
+                        <label>Week in Review</label>
+                    </div>
+                    <div class="checkbox">
+                        <InputCheckbox  @bind-Value="SubscribeForm.EventUpdates" />
+                        <label>Event Updates</label>
+                    </div>
+                    <div class="checkbox">
+                        <InputCheckbox @bind-Value="SubscribeForm.StartupsWeekly" />
+                        <label>Startups Weekly</label>
+                    </div>
+                    <div class="checkbox">
+                        <InputCheckbox @bind-Value="SubscribeForm.Podcasts" />
+                        <label>Podcasts</label>
+                    </div>
+                </div>
+            </div>
+            <div class="sign-up">
+                <InputText type="email" @bind-Value="SubscribeForm.Email" />
+
+                <button class="btn-theme" type="submit">
+                    Subscribe*
+                </button>
+            </div>
+
+            <span class="information">
+                    <span class="terms">@StatusMessage</span>  
+            </span>
+        </EditForm>
+
+
+    </div>
+</section>
+<script defer src="~/js/validation.js"></script>
+
+@code {
+    [SupplyParameterFromQuery]
+    public string StatusMessage { get; set; } = "* Yes, I agree to the terms and privacy policy.";
+
+    [SupplyParameterFromQuery]
+    public string StatusMessageError { get; set; } = null!;
+
+    [SupplyParameterFromForm]
+    public SubscribeFormModel SubscribeForm { get; set; } = new SubscribeFormModel();
+
+    private async Task OnValidSubmit()
+    {
+        
+    }
+
+    // https://youtu.be/3-tudoq_zEA?t=5676
+
+    public class SubscribeFormModel
+    {
+
+        [Required(ErrorMessage = "You must enter a valid email.")]
+        [Display(Name = "Subscribe", Prompt = "Enter your email address")]
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; } = null!;
+
+        [Display(Name = "Advertising Updates")]
+        public bool AdvertisingUpdates { get; set; } = false;
+
+        [Display(Name = "Week in Review")]
+        public bool WeekInReview { get; set; } = false;
+
+        [Display(Name = "Podcasts")]
+        public bool Podcasts { get; set; } = false;
+
+        [Display(Name = "Startups Weekly")]
+        public bool StartupsWeekly { get; set; } = false;
+
+        [Display(Name = "Daily Newsletter")]
+        public bool DailyNewsletter { get; set; } = false;
+
+        [Display(Name = "Event Updates")]
+        public bool EventUpdates { get; set; } = false;
+
+        public bool IsSubscribed { get; set; } = false;
+    }
+}

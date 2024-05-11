@@ -51,6 +51,10 @@
   --color-transparent: transparent;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 html, body {
   line-height: 160%;
   font-weight: 400;

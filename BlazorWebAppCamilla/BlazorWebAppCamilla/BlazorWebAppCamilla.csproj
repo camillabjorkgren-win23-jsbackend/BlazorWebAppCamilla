@@ -13,10 +13,10 @@
 
   <ItemGroup>
     <None Include="compilerconfig.json" />
-    <None Include="Components\Components\_Features.razor" />
-    <None Include="Components\Components\_Footer.razor" />
-    <None Include="Components\Components\_Header.razor" />
-    <None Include="Components\Components\_Showcase.razor" />
+    <None Include="Components\Sections\_Features.razor" />
+    <None Include="Components\Sections\_Footer.razor" />
+    <None Include="Components\Sections\_Header.razor" />
+    <None Include="Components\Sections\_Showcase.razor" />
   </ItemGroup>
 
   <ItemGroup>
