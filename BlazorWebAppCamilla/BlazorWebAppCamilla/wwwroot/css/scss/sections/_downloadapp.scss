@@ -1,0 +1,100 @@
+.download-app {
+    background-color: var(--color-gray-100);
+
+    .container {
+        background-color: var(--color-gray-200);
+        padding: 20px;
+        display: flex;
+        justify-content: space-around;
+
+        @include lg {
+            padding: 50px;
+        }
+
+        .left {
+            display: none;
+
+            @include md {
+                display: block;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+
+        .right {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            row-gap: 20px;
+
+
+            .title {
+                width: fit-content;
+
+
+                h1 {
+                    @include h5;
+
+                    @include lg {
+                        @include h2;
+                    }
+                }
+
+                @include lg {
+                    width: 60%;
+                }
+            }
+
+
+            .app-store {
+                display: flex;
+                gap: 10px;
+                align-items: end;
+
+                @include lg {
+                    gap: 50px;
+                }
+
+
+
+                h3 {
+                    @include h6;
+
+                    @include lg {
+                        @include h3;
+                    }
+                }
+
+
+                p {
+                    margin: 0;
+                }
+            }
+
+
+
+            .google-play {
+                display: flex;
+                align-items: end;
+                gap: 10px;
+
+                @include lg {
+                    gap: 50px;
+                }
+
+                h3 {
+                    @include h6;
+
+                    @include lg {
+                        @include h3;
+                    }
+                }
+
+                p {
+                    margin: 0;
+                }
+            }
+        }
+    }
+}

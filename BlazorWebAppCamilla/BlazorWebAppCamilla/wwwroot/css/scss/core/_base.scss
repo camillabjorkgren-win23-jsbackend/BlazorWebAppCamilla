@@ -1,0 +1,208 @@
+html, body {
+    @include standard-text;
+    font-size: 16px;
+}
+
+.text-xs {
+    @include text-xs;
+}
+
+.text-s {
+    @include text-s;
+}
+
+.text-m {
+    @include text-m;
+}
+
+.text-lg {
+    @include text-lg;
+}
+
+.text-xl {
+    @include text-xl;
+}
+
+.text-lead {
+    @include text-lead;
+}
+
+.d1 {
+    @include d1;
+}
+
+.d2 {
+    @include d2;
+}
+
+.d3 {
+    @include d3;
+}
+
+.d4 {
+    @include d4;
+}
+
+.d5 {
+    @include d5;
+}
+
+.d6 {
+    @include d6;
+}
+
+h1, .h1 {
+    @include h1;
+}
+
+h2, .h2 {
+    @include h2;
+}
+
+h3, .h3 {
+    @include h3;
+}
+
+h4, .h4 {
+    @include h4;
+}
+
+h5, .h5 {
+    @include h5;
+}
+
+h6, .h6 {
+    @include h6;
+}
+
+body {
+    color: var(--color-gray-800) !important;
+    background-color: var(--color-gray-000) !important;
+}
+
+.wrapper {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.form {
+    @include standard-heading;
+    background-color: var(--color-gray-000);
+    border-radius: 6px;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    margin-top: 2rem;
+
+
+    .form-control {
+        background: var(--color-gray-050);
+        border: 1px solid var(--color-gray);
+        border-radius: 8px !important;
+        border: 1px solid var(--color-gray-400);
+        color: var(--color-gray-150);
+        padding: 1rem;
+
+        input::placeholder {
+            color: var(--color-gray);
+        }
+
+
+        &.input-validation-error {
+            border: 2px solid $danger !important;
+            border-radius: 0.5rem !important;
+            color: $danger;
+        }
+    }
+
+
+    .form-select {
+        background: var(--color-gray-050);
+        border: 1px solid var(--color-gray);
+        color: var(--color-gray-150);
+    }
+
+    textarea {
+        background: var(--color-gray-050);
+        border: 1px solid var(--color-gray);
+        color: var(--color-gray-150);
+    }
+
+    span {
+        &.field-validation-error {
+            @include text-s;
+            color: $danger;
+        }
+    }
+
+    .form-check-label {
+        @include standard-text;
+        margin-left: 0.5rem;
+    }
+
+    .form-check {
+        @include standard-text;
+        display: inline-flex;
+        align-items: center;
+        padding: 0;
+
+        #RememberMe {
+            margin: 0;
+        }
+        .form-check-input {
+            margin: 0;
+        }
+    }
+}
+
+.alert-success-pop {
+    background-color: var(--color-success);
+    width: 70%;
+    padding: 1rem;
+    text-align: center;
+    border-radius: 6px;
+    margin: 0 auto;
+    color: black;
+}
+
+.alert-danger-pop {
+    background-color: var(--color-danger);
+    padding: 1rem;
+    width: 70%;
+    text-align: center;
+    border-radius: 6px;
+    margin: 0 auto;
+    color: black;
+}
+
+.pagination {
+    display: inline-block;
+    margin-top: 25px;
+    width: 100%;
+
+
+    a {
+        margin-right: 1rem;
+
+        i {
+            margin-right: 0.5rem;
+        }
+    }
+
+    i {
+        margin-right: 2rem;
+    }
+}

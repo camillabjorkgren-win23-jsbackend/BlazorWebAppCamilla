@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -6,6 +6,18 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-BlazorWebAppCamilla-3ac1f9cf-d599-4750-883c-f0ebace4c6b4</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="compilerconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="compilerconfig.json" />
+    <None Include="Components\Components\_Features.razor" />
+    <None Include="Components\Components\_Footer.razor" />
+    <None Include="Components\Components\_Header.razor" />
+    <None Include="Components\Components\_Showcase.razor" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BlazorWebAppCamilla.Client\BlazorWebAppCamilla.Client.csproj" />

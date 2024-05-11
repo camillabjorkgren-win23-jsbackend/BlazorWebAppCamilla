@@ -1,0 +1,158 @@
+.newsletter {
+    background-color: var(--color-gray-100);
+    padding: 60px 0;
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        @include md {
+            padding: 50px;
+        }
+
+
+
+        .title {
+            @include h4;
+            display: flex;
+            text-align: center;
+            padding: 35px 0;
+
+
+            @include md {
+                @include h2;
+                text-align: left;
+                gap: 1.5rem;
+            }
+
+            @include xl {
+                width: 85%;
+            }
+
+
+            .arrows {
+                img {
+                    width: 50px;
+                    height: 42px;
+                    display: none;
+
+                    @include md {
+                        display: block;
+                    }
+                }
+            }
+        }
+
+        form {
+            @include xl {
+                width: 85%;
+            }
+
+            .sign-up-checkbox {
+                width: fit-content;
+                margin: 0 auto;
+
+
+
+                @include md {
+                    display: flex;
+                    align-items: center;
+                    justify-content: unset;
+                    width: 100%;
+                }
+
+                @include xl {
+                    width: 85%;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    gap: 3rem;
+                    width: 100%;
+                }
+
+                h6 {
+                    width: min-content;
+                    grid-area: title;
+
+                    @include md {
+                        margin-right: 2rem;
+                    }
+                }
+
+                .grid {
+                    display: grid;
+                    gap: 0.5rem 6rem;
+                    grid-area: checkbox;
+
+                    @include lg {
+                        grid-template-columns: repeat(3, 1fr);
+                    }
+
+
+                    .checkbox {
+                        gap: 5rem;
+
+                        input {
+                            accent-color: var(--color-theme);
+                        }
+                    }
+                }
+            }
+
+            .sign-up {
+                margin: 50px 0 0 0;
+                gap: 2rem 2rem;
+                width: 100%;
+                grid-area: input;
+
+                @include lg {
+                    display: flex;
+                }
+
+                button {
+                    margin: 2rem auto;
+
+                    @include lg {
+                        margin: 0;
+                    }
+                }
+
+
+                input {
+                    width: 100%;
+                    border-radius: 5px;
+                    border: 1px solid var(--color-gray-400);
+                }
+            }
+
+            .information {
+                @include text-xs;
+                text-align: left;
+                width: fit-content;
+
+                .alert-success-pop {
+                    margin: 0;
+                    width: fit-content;
+                    margin-top: 1rem;
+                }
+
+                .alert-danger-pop {
+                    margin: 0;
+                    width: fit-content;
+                    margin-top: 1rem;
+                }
+
+                .terms {
+                    @include text-xs;
+                    text-align: left;
+                    width: fit-content;
+                }
+                .validation {
+                    color: red;
+                    margin-left: 3rem;
+                }
+            }
+        }
+    }
+}

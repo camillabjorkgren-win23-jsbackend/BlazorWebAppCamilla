@@ -1,0 +1,88 @@
+//Overflow.....
+
+.showcase {
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+    margin-bottom: 100px;
+    height: fit-content;
+
+
+    .background-image {
+        position: absolute;
+        z-index: -1;
+        width: 45%;
+    }
+
+    .container {
+        display: flex;
+
+        .content {
+            margin-top: 0px;
+            width: 100%;
+            text-align: left;
+
+            @include xl {
+                margin-top: 100px;
+                width: 40%;
+                text-align: left;
+                height: 100%;
+            }
+
+
+            h1 {
+                @include h3;
+                width: 50vw;
+
+
+
+                @include md {
+                    @include h1;
+                }
+
+                @include xl {
+                    @include d4;
+                }
+            }
+
+            p {
+                margin: 20px 0 40px 0;
+                @include text-m;
+                width: 50vw;
+
+                @include lg {
+                    margin: 40px 0 50px 0;
+                    width: 30vw;
+                    @include text-lg
+                }
+            }
+
+            .btn-theme-s {
+                display: inline-block;
+            }
+
+            h6 {
+                margin: 150px 0 30px 0;
+                display: none;
+
+                @include xl {
+                    margin: 100px 0 30px 0;
+                    display: flex;
+                }
+            }
+
+            .brands {
+                display: none;
+                gap: 30px;
+
+                @include xl {
+                    display: flex;
+                }
+
+                img {
+                    width: 120px
+                }
+            }
+        }
+    }
+}

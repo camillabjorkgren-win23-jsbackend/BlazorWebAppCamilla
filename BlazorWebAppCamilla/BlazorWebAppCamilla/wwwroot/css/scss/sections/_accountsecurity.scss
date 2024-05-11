@@ -1,0 +1,252 @@
+#account-security {
+    height: 100%;
+    width: 100%;
+
+    .container {
+        padding: 20px;
+        height: 100%;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+        grid-template-areas: "userinfo" "content";
+        row-gap: 2rem;
+
+        @include lg {
+            grid-template-columns: 1fr 2fr;
+            grid-template-areas: "userinfo content";
+            gap: 1rem 5rem;
+            padding: 40px;
+        }
+
+        h6 {
+            color: var(--color-theme);
+        }
+
+        .buttons {
+            display: flex;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+
+
+        .user {
+            grid-area: userinfo;
+            @include standard-text;
+            border-right: 1px solid var(--color-gray-200);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+            gap: 1.5rem;
+            justify-content: center;
+            background-color: var(--color-gray-200);
+            border-radius: 6px;
+            padding: 10px;
+
+            @include md {
+                justify-content: space-around;
+            }
+
+            @include lg {
+                justify-content: flex-start;
+                background-color: var(--color-white);
+                padding: 0;
+                flex-direction: column;
+            }
+
+            .info {
+                display: flex;
+                flex-direction: column;
+
+                @include lg {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            }
+
+            .btn-user {
+                width: 40%;
+                margin-top: 1rem;
+
+
+                @include lg {
+                    width: 70%;
+                }
+
+                .button {
+                    width: 100%;
+                    display: inline-block;
+                    text-align: left;
+                    padding: 10px;
+                    color: var(--color-gray-900);
+                    border: 1px solid transparent;
+                    box-sizing: border-box;
+
+                    &:hover {
+                        border: 1px solid var(--color-gray-700);
+                    }
+
+                    .i {
+                        margin-right: 1rem;
+                        display: none;
+
+                        @include md {
+                            display: inline-block;
+                        }
+                    }
+                }
+
+                .active {
+                    background-color: var(--color-theme);
+                    color: var(--color-white);
+                }
+
+
+                .signout {
+                    @include standard-heading;
+                    display: inline-block;
+                    width: 100%;
+                    text-align: left;
+                    margin-top: 1rem;
+                    margin-left: 1rem;
+                }
+            }
+
+            .user-img {
+                cursor: pointer;
+                width: 120px;
+                height: 120px;
+                margin-bottom: 1rem;
+                position: relative;
+
+                img {
+                    border-radius: 60px;
+                    object-fit: cover;
+                }
+
+                .btn-circle-sm {
+                    position: absolute;
+                    top: 85px;
+                    right: 2px;
+                    background-color: var(--color-gray-100);
+                    color: var(--color-gray-800);
+                    padding: 4px;
+                    border-radius: 50%;
+
+                    &:hover {
+                        color: var(--color-gray-100);
+                        background-color: var(--color-gray-700);
+                    }
+                }
+            }
+
+            .name {
+                @include h6;
+            }
+
+            .email {
+                text-align: center;
+            }
+        }
+
+        .content {
+            grid-area: content;
+
+            .message {
+                background-color: var(--color-gray);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 15px;
+                border-radius: 8px;
+                color: black;
+            }
+
+
+            .password-form {
+                @include standard-heading;
+
+
+                input::placeholder {
+                    color: var(--color-gray-400);
+                }
+
+                .title {
+                    @include h2;
+                }
+
+
+                .form-password {
+                    .current-password {
+                        width: 50%;
+                    }
+
+                    .create-new-password {
+                        gap: 1rem;
+
+                        @include md {
+                            display: flex;
+                        }
+
+                        .new-password {
+                            width: 100%;
+
+                            #password-error {
+                                @include text-s;
+                                color: var(--color-danger);
+                            }
+
+                            input {
+
+                                &.input-validation-error {
+                                    border: 2px solid var(--color-danger) !important;
+                                    border-radius: 0.5rem !important;
+                                    color: $danger;
+                                }
+                            }
+
+                            span {
+                                &.field-validation-error {
+                                    @include text-s;
+                                    color: var(--color-danger);
+                                }
+                            }
+                        }
+
+                        .confirm-password {
+                            width: 100%;
+
+
+                            input {
+
+                                &.input-validation-error {
+                                    border: 2px solid var(--color-danger) !important;
+                                    border-radius: 0.5rem !important;
+                                    color: var(--color-danger);
+                                }
+                            }
+
+                            span {
+                                &.field-validation-error {
+                                    @include text-s;
+                                    color: var(--color-danger);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .delete-account {
+                form {
+                    .checkbox-group {
+                        margin-bottom: 15px;
+                    }
+                }
+            }
+        }
+    }
+}

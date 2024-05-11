@@ -1,0 +1,85 @@
+.settings {
+    height: 100vh;
+
+    .container {
+        height: 80%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .content {
+            width: 70%;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-areas: 'user' 'course';
+            gap: 2rem;
+
+            @include lg {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas: 'user course';
+                gap: 5rem;
+            }
+
+            .image {
+                max-width: 150px;
+                max-height: 150px;
+                margin: auto;
+                margin-bottom: 50px;
+
+                img {
+                    border-radius: 15px;
+                    min-width: 150px;
+                    min-height: 150px;
+                }
+            }
+
+            ul {
+                color: var(--color-gray-900);
+                width: fit-content;
+
+                li {
+                    color: var(--color-gray-900);
+                    width: fit-content;
+                }
+            }
+
+
+            .useradmin {
+                grid-area: user;
+                @include shadow-s;
+                text-decoration: none;
+                color: var(--color-gray-000);
+                position: relative;
+                max-height: min-content;
+                background-color: var(--color-gray-100);
+
+
+                h3 {
+                    text-align: center;
+                }
+
+                &:hover {
+                    background-color: var(--color-gray-300);
+                }
+            }
+
+            .courseadmin {
+                grid-area: course;
+                @include shadow-s;
+                text-decoration: none;
+                color: var(--color-gray-000);
+                position: relative;
+                max-height: min-content;
+                background-color: var(--color-gray-100);
+
+                h3 {
+                    text-align: center;
+                }
+
+                &:hover {
+                    background-color: var(--color-gray-300);
+                }
+            }
+        }
+    }
+}

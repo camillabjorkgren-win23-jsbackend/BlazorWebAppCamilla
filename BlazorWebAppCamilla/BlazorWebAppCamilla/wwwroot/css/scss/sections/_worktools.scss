@@ -1,0 +1,41 @@
+.work-tools {
+    padding: 100px 0;
+    .container {
+        .title {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            width: 70%;
+            margin: 0 auto;
+            padding: 35px 0;
+        }
+       .grid {
+        display: grid;
+        gap: 2rem 1rem;
+
+        @include md {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @include lg {
+            grid-template-columns: repeat(4, 1fr);
+        }
+      
+        .work-tool {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            width: fit-content;
+            padding: 20px;
+            
+            img {
+                width: min-content;
+            }
+
+            &:hover {
+                @include shadow-l;
+                border: 1px solid var(--color-gray-100);
+            }
+        }
+       }
+    }
+}

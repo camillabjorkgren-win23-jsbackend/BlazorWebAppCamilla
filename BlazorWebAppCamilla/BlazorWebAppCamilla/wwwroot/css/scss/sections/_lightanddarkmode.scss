@@ -1,0 +1,151 @@
+.lightanddark {
+    position: relative;
+    width: 100%;
+    height: 50vh;
+    padding-bottom: 5rem;
+
+    @include xl {
+        width: 100%;
+        height: 80vh;
+    }
+
+    .dark {
+        background-color: $gray-900;
+        position: absolute;
+        width: 100%;
+        height: 50vh;
+        top: 0;
+        left: 0;
+        clip-path: polygon(0 0, 50% 0, 50% 100%, 0% 100%);
+
+        @include md {
+            width: 100%;
+            height: 100%;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            width: 100%;
+            height: 50vh;
+
+            @include xl {
+                width: 100%;
+                height: fit-content;
+            }
+
+            .title {
+                position: relative;
+                margin: 0 auto;
+                color: var(--color-white);
+                text-align: center;
+
+
+                h1 {
+                    @include h3;
+
+                    @include md {
+                        @include h1;
+                    }
+
+                    padding: 50px;
+                }
+
+                #darkmode-title {
+                    color: $white;
+                }
+            }
+
+            .image {
+                margin: auto;
+                padding-bottom: 80px;
+
+                @include xl {
+                    width: 50vw;
+                }
+
+                img {
+                    display: none;
+
+                    @include lg {
+                        display: block;
+                        object-fit: contain;
+                        width: 30vw;
+                        margin: 0 auto;
+                    }
+                }
+            }
+        }
+    }
+
+    .light {
+        background-color: white;
+        position: absolute;
+        width: 100%;
+        height: 50vh;
+        top: 0;
+        left: 0;
+        clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+
+        @include xl {
+            width: 100%;
+            height: 100%;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            width: 100%;
+            height: 50vh;
+
+            @include md {
+                width: 100%;
+                height: fit-content;
+            }
+
+            .title {
+                position: relative;
+                margin: 0 auto;
+                color: $gray-900;
+                text-align: center;
+
+                h1 {
+                    @include h3;
+
+                    @include md {
+                        @include h1;
+                    }
+
+                    padding: 50px;
+                }
+
+                #lightmode-title {
+                    color: $gray-900;
+                }
+            }
+
+            .image {
+                margin: auto;
+                padding-bottom: 80px;
+
+                @include xl {
+                    width: 50vw;
+                }
+
+
+                img {
+                    display: none;
+
+                    @include lg {
+                        display: block;
+                        object-fit: contain;
+                        width: 30vw;
+                        margin: 0 auto;
+                    }
+                }
+            }
+        }
+    }
+}

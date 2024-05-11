@@ -1,0 +1,21 @@
+.messages {
+    .container {
+        .message-list {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1rem;
+
+                a {
+                    &:hover {
+                        text-decoration: none;
+                        @include shadow-l;
+                    }
+                }
+                .message {
+                    .message-content {
+
+                    }
+                }
+            }
+        }
+    }

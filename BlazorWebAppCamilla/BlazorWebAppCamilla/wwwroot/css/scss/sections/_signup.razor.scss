@@ -1,0 +1,59 @@
+.sign-up {
+    height: 100%;
+
+    .container {
+        padding: 15px;
+        max-width: fit-content;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+
+        @include md {
+            padding: 40px;
+        }
+
+        .errormessage {
+            background-color: var(--color-danger);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            border-radius: 8px;
+            color: black;
+        }
+
+
+        form {
+            @include standard-heading;
+
+            .name {
+                @include md {
+                    display: flex;
+                    gap: 1rem;
+                }
+
+
+                .label-name {
+                    display: flex;
+                }
+
+                .name {
+                    display: flex;
+                }
+            }
+
+            .mb-3 {
+                position: relative;
+            }
+
+
+
+
+            button {
+                width: 100%;
+            }
+        }
+    }
+}

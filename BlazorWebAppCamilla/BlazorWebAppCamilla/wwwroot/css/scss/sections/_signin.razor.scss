@@ -1,0 +1,50 @@
+.sign-in {
+    height: 100%;
+
+    .container {
+        padding: 40px;
+        max-width: 50vh;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+
+        .errormessage {
+            background: var(--color-danger);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            border-radius: 8px;
+            color: black;
+        }
+
+        form {
+
+            button {
+                width: 100%;
+            }
+
+            .form-text {
+                text-align: center;
+            }
+
+            
+
+            .external-providers {
+                margin-top: 30px;
+                display: flex;
+                flex-direction: column;
+                text-align: center;
+                justify-content: center;
+                align-items: center;
+
+                .providers {
+                    gap: 15px;
+                    display: flex;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,121 @@
+#contact {
+    background-color: var(--color-gray-100);
+
+    .container {
+
+        .content {
+            display: flex;
+
+            .left-content {
+                display: none;
+
+
+                @include md {
+                    display: block;
+                    margin-right: 2rem;
+                }
+
+
+                .title {
+                    margin-top: 30px;
+                    margin-bottom: 30px;
+                }
+
+                h3 {
+                    @include h5;
+                }
+
+                .contactus {
+                    display: grid;
+                    grid-template-columns: min-content auto;
+                    grid-template-areas:
+                        'icon title' '. text' '. link';
+                    align-items: center;
+                    column-gap: 1.5rem;
+                    margin-bottom: 2rem;
+                    padding: 20px;
+                    width: 100%;
+
+                    i {
+                        grid-area: icon;
+                        background-color: var(--color-gray-000);
+                        padding: 15px;
+                        border-radius: 25px;
+                        color: $theme;
+                    }
+
+                    .t {
+                        width: 100%;
+                        grid-area: text;
+                    }
+
+
+                    .message {
+                        @include standard-heading;
+                        color: var(--color-theme);
+                        grid-area: link;
+                        width: 100%;
+
+                        i {
+                            background-color: transparent;
+                        }
+                    }
+
+                    h3 {
+                        grid-area: title;
+                    }
+                }
+            }
+
+
+            .right-content {
+                position: relative;
+                width: 100%;
+
+                form {
+                    padding: 20px;
+                    margin-top: 2rem;
+
+
+
+                    @include md {
+                        position: absolute;
+                        top: 15%;
+                        right: 10%;
+                    }
+
+                    @include lg {
+                        top: 25%;
+                        padding: 55px;
+                    }
+
+                    h2 {
+                        @include h5;
+
+                        @include lg {
+                            @include h3;
+                        }
+                    }
+
+                    textarea {
+                        display: block;
+                        width: 100%;
+                        box-sizing: border-box;
+                        border-radius: 10px;
+                        resize: none;
+                        height: 150px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.map {
+    max-height: 100%;
+
+    iframe {
+        width: 100%;
+        max-height: max-content;
+    }
+}
