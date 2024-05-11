@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebAppCamilla", "BlazorWebAppCamilla\BlazorWebAppCamilla\BlazorWebAppCamilla.csproj", "{1FE0CD0A-D3B5-4A2C-8EC0-29A31699B4A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebAppCamilla.Client", "BlazorWebAppCamilla\BlazorWebAppCamilla.Client\BlazorWebAppCamilla.Client.csproj", "{BE5D75E3-0E6E-4CD4-BC68-97605A6E4DE5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1FE0CD0A-D3B5-4A2C-8EC0-29A31699B4A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FE0CD0A-D3B5-4A2C-8EC0-29A31699B4A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FE0CD0A-D3B5-4A2C-8EC0-29A31699B4A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FE0CD0A-D3B5-4A2C-8EC0-29A31699B4A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE5D75E3-0E6E-4CD4-BC68-97605A6E4DE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE5D75E3-0E6E-4CD4-BC68-97605A6E4DE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE5D75E3-0E6E-4CD4-BC68-97605A6E4DE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE5D75E3-0E6E-4CD4-BC68-97605A6E4DE5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2ED88ECE-A8A1-4F8B-8C7F-EEE12A3FFC5F}
+	EndGlobalSection
+EndGlobal
