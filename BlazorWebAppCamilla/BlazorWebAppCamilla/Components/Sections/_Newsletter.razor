@@ -1,4 +1,5 @@
-﻿
+﻿@rendermode InteractiveServer
+
 <section class="newsletter" id="newsletter">
     <div class="container">
         <div class="title">
@@ -6,6 +7,7 @@
             <div class="arrows"><img src="/images/arrows.svg" alt="arrows"></div>
         </div>
         <EditForm method="post" FormName="subscribeform" Model="SubscribeForm" OnValidSubmit="OnValidSubmit" novalidate>
+            <DataAnnotationsValidator/>
             <div class="sign-up-checkbox">
                 <h6>Sign up for Newsletters</h6>
                 <div class="grid">
@@ -36,7 +38,7 @@
                 </div>
             </div>
             <div class="sign-up">
-                <InputText type="email" @bind-Value="SubscribeForm.Email" />
+                <InputText type="email" placeholder="Enter your email" @bind-Value="SubscribeForm.Email" />
 
                 <button class="btn-theme" type="submit">
                     Subscribe*
@@ -44,6 +46,7 @@
             </div>
 
             <span class="information">
+                <ValidationMessage For="@(() => SubscribeForm.Email)" class="alert-danger-pop" />
                     <span class="terms">@StatusMessage</span>  
             </span>
         </EditForm>
@@ -51,7 +54,7 @@
 
     </div>
 </section>
-<script defer src="~/js/validation.js"></script>
+@* <script defer src="~/js/validation.js"></script> *@
 
 @code {
     [SupplyParameterFromQuery]
@@ -63,12 +66,22 @@
     [SupplyParameterFromForm]
     public SubscribeFormModel SubscribeForm { get; set; } = new SubscribeFormModel();
 
+
     private async Task OnValidSubmit()
     {
-        
-    }
+        try
+        {
+            var result = await Http.PostAsJsonAsync("subscribeprovider-", SubscribeForm);
+            if (result.IsSuccessStatusCode)
+                StatusMessage = "Thank you for subscribing!";
+        }
+        catch 
+        {
+            StatusMessage = "Unable to subscribe right now. Please try again later."; 
+        }
+        SubscribeForm = new SubscribeFormModel();
 
-    // https://youtu.be/3-tudoq_zEA?t=5676
+    }
 
     public class SubscribeFormModel
     {
