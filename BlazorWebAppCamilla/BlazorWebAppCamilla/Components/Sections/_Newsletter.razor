@@ -71,7 +71,7 @@
     {
         try
         {
-            var result = await Http.PostAsJsonAsync("subscribeprovider-", SubscribeForm);
+            var result = await Http.PostAsJsonAsync("https://newsletterprovider-silicon-camilla.azurewebsites.net/api/Subscribe?code=xlAYAvA90Wpgn_ZFyyYauReZ4dKASqe5ZrhsD6WPrcWeAzFuUYC8iA==", SubscribeForm);
             if (result.IsSuccessStatusCode)
                 StatusMessage = "Thank you for subscribing!";
         }

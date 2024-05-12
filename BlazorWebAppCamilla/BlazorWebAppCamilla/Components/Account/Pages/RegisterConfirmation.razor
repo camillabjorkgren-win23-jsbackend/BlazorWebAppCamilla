@@ -1,4 +1,5 @@
 ﻿@page "/Account/RegisterConfirmation"
+@rendermode InteractiveServer
 
 @using System.Text
 @using Microsoft.AspNetCore.Identity
@@ -14,23 +15,28 @@
 
 <h1>Register confirmation</h1>
 
-<StatusMessage Message="@statusMessage" />
 
-@if (emailConfirmationLink is not null)
-{
-    <p>
-        This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
-        Normally this would be emailed: <a href="@emailConfirmationLink">Click here to confirm your account</a>
-    </p>
-}
-else
-{
-    <p>Please check your email to confirm your account.</p>
-}
+
+<h1>Verify Your Account</h1>
+<p>Didn't receive an email?<button @onclick="ResendCode">Resend Code</button></p>
+<EditForm class="form" method="post" novalidate FormName="VerifyCode" Model="VerifyCodeForm" asp-route-returnUrl="@ReturnUrl" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <StatusMessage Message="@StatusMessage" />
+   
+    <div class="mb-3">
+        <label class="form-label">Enter Your Verification Code</label>
+        <ValidationMessage For="() =>VerifyCodeForm.Code" class="text-danger" />
+            <p>@StatusMessage</p>
+        <InputText class="form-control" type="text" @bind-Value="VerifyCodeForm.Code" />
+    </div>
+    <button type="submit" class="btn-theme-s">Verify Code</button>
+</EditForm>
+
 
 @code {
-    private string? emailConfirmationLink;
-    private string? statusMessage;
+
+    [SupplyParameterFromQuery]
+    public string StatusMessage { get; set; } = "";
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
@@ -40,6 +46,42 @@ else
 
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
+
+    [SupplyParameterFromForm]
+    private VerifyCodeModel VerifyCodeForm { get; set; } = new VerifyCodeModel();
+
+    private async Task OnValidSubmit()
+    {
+        var result = await Http.PostAsJsonAsync("https://verificationprovider-silicon-camilla.azurewebsites.net/api/validate?code=y88D2-qlrXm5-KuFGf9kYo3-RgqiUN23aMZfkGM_ovOmAzFuI9m1Bg==", new
+        {
+            Email = Email,
+            Code = VerifyCodeForm.Code
+        });
+        if (result.IsSuccessStatusCode)
+        {
+            var user = await UserManager.FindByEmailAsync(Email!);
+            user!.EmailConfirmed = true;
+            await UserManager.UpdateAsync(user);       
+        }
+        else
+        {
+            StatusMessage = "Invalid code.";
+        }
+    }
+
+    private async Task ResendCode()
+    {
+        var result = await Http.PostAsJsonAsync("https://verificationprovider-silicon-camilla.azurewebsites.net/api/GenereteVerificationCodeHTTP?code=AU2PSgQQ2lf0u1KXPteNdTjVRQfF7hNIj7uEKRSpJtdtAzFuNlrtZw==", new { Email = Email });
+        if (result.IsSuccessStatusCode)
+        {
+            StatusMessage = "Code resent";
+        }
+        else
+        {
+            StatusMessage = "Unable to resend code";
+        }
+
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -52,17 +94,12 @@ else
         if (user is null)
         {
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-            statusMessage = "Error finding user for unspecified email";
+            StatusMessage = "Error finding user for unspecified email";
         }
-        else if (EmailSender is IdentityNoOpEmailSender)
-        {
-            // Once you add a real email sender, you should remove this code that lets you confirm the account
-            var userId = await UserManager.GetUserIdAsync(user);
-            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            emailConfirmationLink = NavigationManager.GetUriWithQueryParameters(
-                NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
-                new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
-        }
+    }
+    public class VerifyCodeModel
+    {
+        [Required]
+        public string Code { get; set; } = null!;
     }
 }
