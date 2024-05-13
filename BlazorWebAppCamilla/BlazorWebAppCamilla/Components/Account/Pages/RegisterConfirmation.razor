@@ -6,6 +6,7 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using BlazorWebAppCamilla.Data
 
+@inject HttpClient Http
 @inject UserManager<ApplicationUser> UserManager
 @inject IEmailSender<ApplicationUser> EmailSender
 @inject NavigationManager NavigationManager
@@ -19,15 +20,15 @@
 
 <h1>Verify Your Account</h1>
 <p>Didn't receive an email?<button @onclick="ResendCode">Resend Code</button></p>
-<EditForm class="form" method="post" novalidate FormName="VerifyCode" Model="VerifyCodeForm" asp-route-returnUrl="@ReturnUrl" OnValidSubmit="OnValidSubmit">
+
+<EditForm class="form" novalidate FormName="VerifyCode" Model="VerifyCodeForm" asp-route-returnUrl="@ReturnUrl" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
-    <StatusMessage Message="@StatusMessage" />
    
     <div class="mb-3">
         <label class="form-label">Enter Your Verification Code</label>
         <ValidationMessage For="() =>VerifyCodeForm.Code" class="text-danger" />
-            <p>@StatusMessage</p>
         <InputText class="form-control" type="text" @bind-Value="VerifyCodeForm.Code" />
+        <p>@statusMessage</p>
     </div>
     <button type="submit" class="btn-theme-s">Verify Code</button>
 </EditForm>
@@ -36,7 +37,7 @@
 @code {
 
     [SupplyParameterFromQuery]
-    public string StatusMessage { get; set; } = "";
+    public string? statusMessage { get; set; }
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
@@ -52,7 +53,7 @@
 
     private async Task OnValidSubmit()
     {
-        var result = await Http.PostAsJsonAsync("https://verificationprovider-silicon-camilla.azurewebsites.net/api/validate?code=y88D2-qlrXm5-KuFGf9kYo3-RgqiUN23aMZfkGM_ovOmAzFuI9m1Bg==", new
+        var result = await Http.PostAsJsonAsync(Configuration.GetValue<string>("API:ValidateCode"), new
         {
             Email = Email,
             Code = VerifyCodeForm.Code
@@ -61,24 +62,28 @@
         {
             var user = await UserManager.FindByEmailAsync(Email!);
             user!.EmailConfirmed = true;
-            await UserManager.UpdateAsync(user);       
+            await UserManager.UpdateAsync(user);     
+            statusMessage = "Your account has been confirmed successfully.";
+            await SignInManager.SignInAsync(user, isPersistent: false);
+            RedirectManager.RedirectTo(ReturnUrl);
+            
         }
         else
         {
-            StatusMessage = "Invalid code.";
+            statusMessage = "Invalid code.";
         }
     }
 
     private async Task ResendCode()
     {
-        var result = await Http.PostAsJsonAsync("https://verificationprovider-silicon-camilla.azurewebsites.net/api/GenereteVerificationCodeHTTP?code=AU2PSgQQ2lf0u1KXPteNdTjVRQfF7hNIj7uEKRSpJtdtAzFuNlrtZw==", new { Email = Email });
+        var result = await Http.PostAsJsonAsync(Configuration.GetValue<string>("API:GenerateCodeHTTP"), new { Email = Email });
         if (result.IsSuccessStatusCode)
         {
-            StatusMessage = "Code resent";
+            statusMessage = "Code resent";
         }
         else
         {
-            StatusMessage = "Unable to resend code";
+            statusMessage = "Unable to resend code";
         }
 
     }
@@ -87,14 +92,14 @@
     {
         if (Email is null)
         {
-            RedirectManager.RedirectTo("");
+            RedirectManager.RedirectTo("/");
         }
 
         var user = await UserManager.FindByEmailAsync(Email);
         if (user is null)
         {
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-            StatusMessage = "Error finding user for unspecified email";
+            statusMessage = "Error finding user for unspecified email";
         }
     }
     public class VerifyCodeModel

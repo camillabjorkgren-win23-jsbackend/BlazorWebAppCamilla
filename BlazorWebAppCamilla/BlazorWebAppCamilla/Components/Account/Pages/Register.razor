@@ -1,7 +1,6 @@
-﻿@page "/signup"
+﻿@page "/Account/Register"
 @rendermode InteractiveServer
-@inject ILogger<Register> Logger
-@inject IdentityRedirectManager RedirectManager
+@inject HttpClient Http
 
 <PageTitle>Sign Up</PageTitle>
 
@@ -13,13 +12,13 @@
             <p>Already have an account? <NavLink href="/signin">Sign in here.</NavLink></p>
         </div>
 
-        @if (!string.IsNullOrEmpty(@StatusMessage))
+        @if (!string.IsNullOrEmpty(@statusMessage))
         {
             <div class="errormessage">
-                @StatusMessage
+                @statusMessage
             </div>
         }
-        <EditForm class="form" method="post" novalidate FormName="Signup" Model="SignUpForm" asp-route-returnUrl="@ReturnUrl" OnValidSubmit="OnValidSubmit">
+        <EditForm class="form" novalidate FormName="Signup" Model="SignUpForm" asp-route-returnUrl="@ReturnUrl" OnValidSubmit="OnValidSubmit">
             <DataAnnotationsValidator />
             <div class="name">
                 <div class="first-name">
@@ -67,10 +66,10 @@
 
 @code {
     [SupplyParameterFromQuery]
-    public string StatusMessage { get; set; } = "";
+    public string statusMessage { get; set; } = "";
 
     [SupplyParameterFromQuery]
-    public string? ReturnUrl { get; set; }
+    private string? ReturnUrl { get; set; }
 
     [SupplyParameterFromForm]
     public SignUpFormModel SignUpForm { get; set; } = new();
@@ -128,33 +127,39 @@
         try
         {
             var alreadyExists = await UserManager.FindByEmailAsync(SignUpForm.Email);
-            if(alreadyExists != null)
+            if (alreadyExists != null)
             {
-                StatusMessage = "An account with this email address already exists.";
+                statusMessage = "An account with this email address already exists.";
                 return;
             }
             var result = await UserManager.CreateAsync(user, SignUpForm.Password);
             if (!result.Succeeded)
             {
-                StatusMessage = "Unable to register account. Please try again.";
+                statusMessage = "Unable to register account. Please try again.";
                 return;
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            StatusMessage = "An error occured while creating the account.";
+            statusMessage = "An error occured while creating the account.";
             return;
         }
 
-        await Http.PostAsJsonAsync("http://localhost:7062/api/GenereteVerificationCodeHTTP", new { Email = SignUpForm.Email });
-        if (UserManager.Options.SignIn.RequireConfirmedAccount)
+        try
         {
-            RedirectManager.RedirectTo(
-            "Account/RegisterConfirmation",
-            new() { ["email"] = user.Email, ["returnUrl"] = ReturnUrl });
-        }
-        await SignInManager.SignInAsync(user, isPersistent: false);
-        RedirectManager.RedirectTo(ReturnUrl);
-    }
+            await Http.PostAsJsonAsync(Configuration.GetValue<string>("API:GenerateCodeHTTP"), new { Email = SignUpForm.Email });
+            if (UserManager.Options.SignIn.RequireConfirmedAccount)
+            {
+                RedirectManager.RedirectTo("Account/RegisterConfirmation", new() { ["email"] = user.Email, ["returnUrl"] = ReturnUrl });
+            }
 
+            await SignInManager.SignInAsync(user, isPersistent: false);
+            RedirectManager.RedirectTo(ReturnUrl);
+        }
+        catch (Exception ex)
+        {
+            statusMessage = "An error occured while creating the verificationcode.";
+            return;
+        }
+    }
 }
