@@ -1,5 +1,7 @@
 ﻿@using System.Net.Http
 @using System.Net.Http.Json
+@using BlazorWebAppCamilla.Components.Account
+@using BlazorWebAppCamilla.Components.Account.Pages
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
@@ -10,4 +12,24 @@
 @using BlazorWebAppCamilla
 @using BlazorWebAppCamilla.Client
 @using BlazorWebAppCamilla.Components
-@using BlazorWebAppCamilla.Components.Components
+@using BlazorWebAppCamilla.Components.Sections
+@using BlazorWebAppCamilla.Client.Components
+@using BlazorWebAppCamilla.Data
+@using Microsoft.AspNetCore.Identity
+@using System.ComponentModel.DataAnnotations
+@inject HttpClient Http
+@using System.Text
+@using System.Text.Encodings.Web
+@using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.Azure.ServiceBus
+@using Newtonsoft.Json
+@inject NavigationManager NavigationManager
+@inject UserManager<ApplicationUser> UserManager
+@inject IUserStore<ApplicationUser> UserStore
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IEmailSender<ApplicationUser> EmailSender
+@inject ILogger<Register> Logger
+@inject IdentityRedirectManager RedirectManager
+@inject IConfiguration Configuration
+@inject SignInManager<ApplicationUser> _signInManager
+@inject RoleManager<IdentityRole> _roleManager

@@ -1,0 +1,109 @@
+﻿
+
+
+<header>
+    <div class="container">
+        <NavLink id="logo" href="/"><img src="/images/logo/silicon-logo.svg" alt="Logotype for Silicon"></NavLink>
+
+        <div id="menu" class="hide">
+            <nav>
+                <NavLink class="menu-link" href="/">Overview</NavLink>
+                <NavLink class="menu-link" href="/#features">Features</NavLink>
+                <AuthorizeView>
+                    <Authorized>
+                        <NavLink class="menu-link" href="/courses">Courses</NavLink>
+                    </Authorized>             
+                </AuthorizeView>
+            </nav>
+        </div>
+
+        <div id="theme-switch" class="btn-switch">
+            <label>Light</label>
+            <label class="switch" for="switch-mode">
+                <input type="checkbox" id="switch-mode" />
+                <span class="slider round"></span>
+            </label>
+            <label>Dark</label>
+        </div>
+
+
+        <div class="account-buttons hide">
+            <AuthorizeView>
+                <Authorized>
+                    <div class="profile">
+                        <div class="image">
+                            <NavLink href="/account"><img src="/uploads/avatar.jpg" alt="Profile image"></NavLink>
+                        </div>
+                    </div>
+                </Authorized>
+                <NotAuthorized>
+                    <NavLink class="btn-gray" href="/signin"><i class="fa-regular fa-arrow-right-to-bracket"></i>Sign in</NavLink>
+                    <NavLink class="btn-theme" href="/Account/Register"><i class="fa-light fa-user"></i>Sign up</NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+
+        <a type="button" onclick="toggleMenu()" class="btn-mobile">
+            <i class="fa-solid fa-bars"></i>
+        </a>
+        <nav class="mobile-menu">
+            <ul>
+                <li><NavLink href="/">Home</NavLink></li>
+                <AuthorizeView>
+                    <NotAuthorized>
+                        <li><NavLink href="/signin">Sign In</NavLink></li>
+                        <li><NavLink href="/Account/Register">Sign Up</NavLink></li>
+                    </NotAuthorized>
+                    <Authorized>
+                        <li><NavLink href="/Courses">Courses</NavLink></li>
+                        <li class="profile">
+                        <div class="image">
+                             <NavLink href="/account"><img src="/uploads/avatar.jpg" alt="Profile image" /></NavLink>             
+                        </div>
+                    </li>
+                    </Authorized>
+                </AuthorizeView>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+
+
+
+
+
+
+
+@* <header>
+    <div class="container">
+        <NavLink id="logo" href="/"><img src="/images/logo/silicon-logo.svg" alt=""></NavLink>
+
+        <div id="menu">
+            <nav>
+                <NavLink class="menu-link" href="/">Overview</NavLink>
+                <NavLink class="menu-link" href="#features">Features</NavLink>
+                <NavLink class="menu-link" href="/courses">Courses</NavLink>
+            </nav>
+        </div>
+
+        <div class="btn-switch">
+            <label>Light</label>
+            <label class="switch" for="switch-mode">
+                <input type="checkbox" id="switch-mode" />
+                <div class="slider round"></div>
+            </label>
+            <label>Dark</label>
+        </div>
+
+        <div class="account-buttons">
+            <NavLink class="btn-gray" href="/signin"><i class="fa-regular fa-arrow-right-to-bracket"></i>Sign in</NavLink>
+            <NavLink class="btn-theme" href="/signup"><i class="fa-light fa-user"></i>Sign up</NavLink>
+        </div>
+    </div>
+</header> *@
+@code {
+
+}
+@* https://youtu.be/JK9oGXfiA38?t=4068 *@

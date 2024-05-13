@@ -1097,3 +1097,166 @@ header .container .show ul .profile img:hover {
 .sign-up .container form button {
   width: 100%;
 }
+
+.newsletter {
+  background-color: var(--color-gray-100);
+  padding: 60px 0;
+}
+.newsletter .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+@media (min-width: 768px) {
+  .newsletter .container {
+    padding: 50px;
+  }
+}
+.newsletter .container .title {
+  line-height: 160%;
+  font-weight: 400;
+  color: var(--color-gray-700);
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
+  color: var(--color-gray-900);
+  font-size: 24px !important;
+  display: flex;
+  text-align: center;
+  padding: 35px 0;
+}
+@media (min-width: 768px) {
+  .newsletter .container .title {
+    line-height: 160%;
+    font-weight: 400;
+    color: var(--color-gray-700);
+    font-family: "Manrope", sans-serif;
+    font-weight: 800;
+    color: var(--color-gray-900);
+    font-size: 32px !important;
+    text-align: left;
+    gap: 1.5rem;
+  }
+}
+@media (min-width: 1200px) {
+  .newsletter .container .title {
+    width: 85%;
+  }
+}
+.newsletter .container .title .arrows img {
+  width: 50px;
+  height: 42px;
+  display: none;
+}
+@media (min-width: 768px) {
+  .newsletter .container .title .arrows img {
+    display: block;
+  }
+}
+@media (min-width: 1200px) {
+  .newsletter .container form {
+    width: 85%;
+  }
+}
+.newsletter .container form .sign-up-checkbox {
+  width: fit-content;
+  margin: 0 auto;
+}
+@media (min-width: 768px) {
+  .newsletter .container form .sign-up-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: unset;
+    width: 100%;
+  }
+}
+@media (min-width: 1200px) {
+  .newsletter .container form .sign-up-checkbox {
+    width: 85%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 3rem;
+    width: 100%;
+  }
+}
+.newsletter .container form .sign-up-checkbox h6 {
+  width: min-content;
+  grid-area: title;
+}
+@media (min-width: 768px) {
+  .newsletter .container form .sign-up-checkbox h6 {
+    margin-right: 2rem;
+  }
+}
+.newsletter .container form .sign-up-checkbox .grid {
+  display: grid;
+  gap: 0.5rem 6rem;
+  grid-area: checkbox;
+}
+@media (min-width: 992px) {
+  .newsletter .container form .sign-up-checkbox .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.newsletter .container form .sign-up-checkbox .grid .checkbox {
+  gap: 5rem;
+}
+.newsletter .container form .sign-up-checkbox .grid .checkbox input {
+  accent-color: var(--color-theme);
+}
+.newsletter .container form .sign-up {
+  margin: 50px 0 0 0;
+  gap: 2rem 2rem;
+  width: 100%;
+  grid-area: input;
+}
+@media (min-width: 992px) {
+  .newsletter .container form .sign-up {
+    display: flex;
+  }
+}
+.newsletter .container form .sign-up button {
+  margin: 2rem auto;
+}
+@media (min-width: 992px) {
+  .newsletter .container form .sign-up button {
+    margin: 0;
+  }
+}
+.newsletter .container form .sign-up input {
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid var(--color-gray-400);
+}
+.newsletter .container form .information {
+  line-height: 160%;
+  font-weight: 400;
+  color: var(--color-gray-700);
+  font-family: "Manrope", sans-serif;
+  font-size: 12px !important;
+  text-align: left;
+  width: fit-content;
+}
+.newsletter .container form .information .alert-success-pop {
+  margin: 0;
+  width: fit-content;
+  margin-top: 1rem;
+}
+.newsletter .container form .information .alert-danger-pop {
+  margin: 0;
+  width: fit-content;
+  margin-top: 1rem;
+}
+.newsletter .container form .information .terms {
+  line-height: 160%;
+  font-weight: 400;
+  color: var(--color-gray-700);
+  font-family: "Manrope", sans-serif;
+  font-size: 12px !important;
+  text-align: left;
+  width: fit-content;
+}
+.newsletter .container form .information .validation {
+  color: red;
+  margin-left: 3rem;
+}
