@@ -65,14 +65,18 @@
             user!.EmailConfirmed = true;
             await UserManager.UpdateAsync(user);     
             statusMessage = "Your account has been confirmed successfully.";
-            await SignInManager.SignInAsync(user, isPersistent: false);
-            RedirectManager.RedirectTo(ReturnUrl);
-            
+            await SignInAsync(user);
         }
         else
         {
             statusMessage = "Invalid code.";
         }
+    }
+
+    private async Task SignInAsync(ApplicationUser user)
+    {    
+        await SignInManager.SignInAsync(user, isPersistent: false);
+        RedirectManager.RedirectTo(ReturnUrl);
     }
 
     private async Task ResendCode()

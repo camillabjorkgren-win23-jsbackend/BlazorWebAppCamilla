@@ -33,3 +33,7 @@
 @inject IConfiguration Configuration
 @inject SignInManager<ApplicationUser> _signInManager
 @inject RoleManager<IdentityRole> _roleManager
+@inject IdentityUserAccessor UserAccessor
+@inject ApplicationUserRepository ApplicationUserRepository
+@using System.Net.Http.Headers
+@using Microsoft.EntityFrameworkCore;

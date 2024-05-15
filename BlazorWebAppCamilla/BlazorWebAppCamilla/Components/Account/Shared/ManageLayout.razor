@@ -1,17 +1,31 @@
 ﻿@inherits LayoutComponentBase
 @layout AccountLayout
 
-<h1>Manage your account</h1>
 
-<div>
-    <h2>Change your account settings</h2>
-    <hr />
-    <div class="row">
-        <div class="col-md-3">
-            <ManageNavMenu />
+
+
+<section class="account-details">
+
+    @if (!string.IsNullOrEmpty(@statusMessage))
+    {
+        <div class="errormessage">
+            @statusMessage
         </div>
-        <div class="col-md-9">
-            @Body
+    }
+    <div class="container">
+
+
+        <UserProfileComponent />
+
         </div>
-    </div>
-</div>
+
+    
+
+</section>
+
+
+
+@code {
+    [SupplyParameterFromQuery]
+    private string statusMessage { get; set; } = "";
+}
