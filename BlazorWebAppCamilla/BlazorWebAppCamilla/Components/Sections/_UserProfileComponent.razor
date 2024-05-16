@@ -1,6 +1,9 @@
 ﻿@attribute [StreamRendering]
+@rendermode InteractiveServer
 
-@if (user == null)
+
+
+@if (User == null)
 {
     <p>Loading...</p>
 
@@ -10,9 +13,9 @@ else
     <div class="user">
         <div class="info">
             <div class="user-img">
-                @if (user.UserProfile != null)
+                @if (User.UserProfile != null)
                 {
-                    <img src="/uploads/@user.UserProfile.ProfileImg" alt="profile image">
+                    <img src="/images/@User.UserProfile.ProfileImg" alt="profile image">
                 }
                 else
                 {
@@ -24,8 +27,8 @@ else
                 </EditForm>
             </div>
 
-            <h6 class="name">@user.UserProfile!.FirstName @user.UserProfile.LastName</h6>
-            <p class="email">@user.Email</p>
+            <h6 class="name">@User.UserProfile!.FirstName @User.UserProfile.LastName</h6>
+            <p class="email">@User.Email</p>
         </div>
         <div class="btn-user">
             <NavLink asp-controller="Account" asp-action="Index"><button class="button btn active"><i class="fa-light fa-gear i"></i> Account Details</button></NavLink>
@@ -38,27 +41,12 @@ else
 
 
 @code {
+    
+    [Parameter]
+    public ApplicationUser User { get; set; }
 
-    private ApplicationUser user = default!;
     private MultipartFormDataContent uploadModel = new MultipartFormDataContent();
     private IBrowserFile? selectedFile;
-
-    [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadUserDataAsync();
-    }
-
-    private async Task LoadUserDataAsync()
-    {
-        user = await UserManager.GetUserAsync(HttpContext.User);
-        if (user != null)
-        {
-            user = await ApplicationUserRepository.GetUserById(user.Id);
-        }
-    }
 
     private void HandleFileSelected(InputFileChangeEventArgs e)
     {
@@ -77,8 +65,6 @@ else
             var response = await Http.PostAsync("http://fileprovider-silicon-camilla.azurewebsites.net/api/upload", content);
             if (response.IsSuccessStatusCode)
             {
-                await LoadUserDataAsync();
-
                 StateHasChanged();
             }
         }

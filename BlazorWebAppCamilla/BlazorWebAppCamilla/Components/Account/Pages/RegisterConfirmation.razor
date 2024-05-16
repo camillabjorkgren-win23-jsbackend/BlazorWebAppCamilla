@@ -4,7 +4,8 @@
 @using System.Text
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
-@using BlazorWebAppCamilla.Data
+@using BlazorWebAppCamilla.Data;
+ 
 
 @inject HttpClient Http
 @inject UserManager<ApplicationUser> UserManager
@@ -14,25 +15,29 @@
 
 <PageTitle>Register confirmation</PageTitle>
 
-<h1>Register confirmation</h1>
+<section>
+    <div class="container">
+        <h1>Register confirmation</h1>
 
 
 
-<h1>Verify Your Account</h1>
-<p>Didn't receive an email?<button @onclick="ResendCode">Resend Code</button></p>
+        <h1>Verify Your Account</h1>
+        <p>Didn't receive an email?<button @onclick="ResendCode">Resend Code</button></p>
 
-<EditForm class="form" novalidate FormName="VerifyCode" Model="VerifyCodeForm" asp-route-returnUrl="@ReturnUrl" OnValidSubmit="OnValidSubmit">
-    <DataAnnotationsValidator />
-   
-    <div class="mb-3">
-        <label class="form-label">Enter Your Verification Code</label>
-        <ValidationMessage For="() =>VerifyCodeForm.Code" class="text-danger" />
-        <InputText class="form-control" type="text" @bind-Value="VerifyCodeForm.Code" />
-        <p>@statusMessage</p>
+        <EditForm class="form" novalidate FormName="VerifyCode" Model="VerifyCodeForm" asp-route-returnUrl="@ReturnUrl" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator />
+
+            <div class="mb-3">
+                <label class="form-label">Enter Your Verification Code</label>
+                <ValidationMessage For="() =>VerifyCodeForm.Code" class="text-danger" />
+                <InputText class="form-control" type="text" @bind-Value="VerifyCodeForm.Code" />
+                <p>@statusMessage</p>
+            </div>
+
+            <button type="submit" class="btn-theme-s">Verify Code</button>
+        </EditForm>
     </div>
-
-    <button type="submit" class="btn-theme-s">Verify Code</button>
-</EditForm>
+</section>
 
 
 @code {

@@ -10,6 +10,6 @@ public class ApplicationUser : IdentityUser
     public DateTime? Created { get; set; }
     public DateTime? Modified { get; set; }
 
-    public int? UserAddressId { get; set; }
+    public string? UserAddressId { get; set; }
     public UserAddress? UserAddress { get; set; }
 }

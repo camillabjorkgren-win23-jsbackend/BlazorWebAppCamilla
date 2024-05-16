@@ -1,7 +1,11 @@
-﻿@inherits LayoutComponentBase
+﻿
+@inherits LayoutComponentBase
 @layout AccountLayout
 
+@attribute [StreamRendering]
 
+
+@inject UserDataService UserDataService
 
 
 <section class="account-details">
@@ -14,18 +18,183 @@
     }
     <div class="container">
 
+        @if (user == null)
+        {
+            <p>Loading...</p>
+        }
+        else
+        {
+       <_UserProfileComponent User="user"/>
 
-        <UserProfileComponent />
 
-        </div>
+            <div class="details-form">
+                <h2 class="title">Account Details</h2>
+                <h6>Basic info</h6>
 
-    
+                <_ProfileDetailsForm User="user"/>
+
+            </div>
+        }
+      
+
+    </div>
 
 </section>
 
 
-
 @code {
-    [SupplyParameterFromQuery]
-    private string statusMessage { get; set; } = "";
+        [SupplyParameterFromQuery]
+        public string statusMessage { get; set; } = "";
+
+    private ApplicationUser user = default!;
+    private MultipartFormDataContent uploadModel = new MultipartFormDataContent();
+    private IBrowserFile? selectedFile;
+
+    // [CascadingParameter]
+    // private AccountDetailsForm DetailsForm { get; set; } = new();
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+
+    private bool loaded { get; set; }
+
+    // private void ClearForm() => DetailsForm = new();
+
+
+    private void HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File;
+    }
+
+
+    public async Task HandleProfileImgUpload()
+    {
+        using var content = new MultipartFormDataContent();
+        var fileContent = new StreamContent(selectedFile.OpenReadStream(maxAllowedSize: 1024 * 1024 * 15));
+        fileContent.Headers.ContentType = new MediaTypeHeaderValue(selectedFile.ContentType);
+        content.Add(fileContent, "file", selectedFile!.Name);
+
+        try
+        {
+            var response = await Http.PostAsync("http://fileprovider-silicon-camilla.azurewebsites.net/api/upload", content);
+            if (response.IsSuccessStatusCode)
+            {
+                user = await UserManager.GetUserAsync(HttpContext.User) ?? null!;
+
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+    }
+    protected override async Task OnInitializedAsync()
+    {
+
+        try
+        {
+            user = await UserDataService.GetUserDataAsync(HttpContext);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+    }
+
+
+    // private async Task LoadUserDataAsync()
+    // {
+    //     user = await UserManager.GetUserAsync(HttpContext.User) ?? null!;
+
+    //     if (user != null)
+    //     {
+    //         user = await ApplicationUserRepository.GetUserById(user.Id);
+
+    //         DetailsForm.FirstName = user.UserProfile?.FirstName;
+    //         DetailsForm.LastName = user.UserProfile?.LastName;
+    //         DetailsForm.Email = UserManager.GetEmailAsync(user).Result;
+
+    //         if (user.PhoneNumber != null && user.UserProfile.Bio != null && user.UserAddress.AddressLine_1 != null && user.UserAddress.AddressLine_2 != null && user.UserAddress.PostalCode != null && user.UserAddress.City != null)
+    //         {
+    //             DetailsForm.Phone = user.PhoneNumber;
+    //             DetailsForm.Bio = user.UserProfile.Bio;
+    //             DetailsForm.AddressLine_1 = user.UserAddress?.AddressLine_1;
+    //             DetailsForm.AddressLine_2 = user.UserAddress?.AddressLine_2;
+    //             DetailsForm.PostalCode = user.UserAddress?.PostalCode;
+    //             DetailsForm.City = user.UserAddress?.City;
+    //         }
+
+    //     }
+    // }
+
+    // public async Task OnValidSubmit(EditContext editContext)
+    // {
+    //     if (DetailsForm.FirstName != null && DetailsForm.LastName != null && DetailsForm.Email != null)
+    //     {
+    //         var user = await UserManager.FindByEmailAsync(DetailsForm.Email);
+    //         if (user != null)
+    //         {
+    //             user.Email = DetailsForm.Email;
+    //             user.PhoneNumber = DetailsForm.Phone ?? "";
+    //             user.Modified = DateTime.Now;
+
+    //             if (user.UserProfile == null)
+    //             {
+    //                 user.UserProfile = new UserProfile
+    //                     {
+    //                         FirstName = DetailsForm.FirstName,
+    //                         LastName = DetailsForm.LastName,
+    //                         Bio = DetailsForm.Bio ?? ""
+    //                     };
+    //             }
+    //             else
+    //             {
+    //                 user.UserProfile.FirstName = DetailsForm.FirstName;
+    //                 user.UserProfile.LastName = DetailsForm.LastName;
+    //                 user.UserProfile.Bio = DetailsForm.Bio ?? "";
+    //                 }
+
+    //             if (user.UserAddress == null)
+    //             {
+    //                 user.UserAddress = new UserAddress
+    //                     {
+    //                         ApplicationUserId = user.Id,
+    //                         AddressLine_1 = DetailsForm.AddressLine_1 ?? "",
+    //                         AddressLine_2 = DetailsForm.AddressLine_2 ?? "",
+    //                         PostalCode = DetailsForm.PostalCode ?? "",
+    //                         City = DetailsForm.City ?? ""
+    //                     };
+    //             }
+    //             else
+    //             {
+    //                 user.UserAddress.AddressLine_1 = DetailsForm.AddressLine_1 ?? "";
+    //                 user.UserAddress.AddressLine_2 = DetailsForm.AddressLine_2 ?? "";
+    //                 user.UserAddress.PostalCode = DetailsForm.PostalCode ?? "";
+    //                 user.UserAddress.City = DetailsForm.City ?? "";
+    //                 }
+
+    //             var result = await UserManager.UpdateAsync(user);
+
+    //             if (!result.Succeeded)
+    //             {
+    //                 statusMessage = "An error occured while updating the account details.";
+    //                 return;
+    //             }
+    //             else
+    //             {
+    //                 statusMessage = "Account details updated successfully.";
+    //                 return;
+    //             }
+    //         }
+    //         else
+    //         {
+    //             statusMessage = "User account could not be found.";
+    //         }
+    //     }
 }
+
+

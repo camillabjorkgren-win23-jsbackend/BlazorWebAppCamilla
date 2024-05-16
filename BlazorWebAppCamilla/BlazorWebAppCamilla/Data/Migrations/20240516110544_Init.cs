@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BlazorWebAppCamilla.Migrations
 {
     /// <inheritdoc />
-    public partial class ProfileandAddressadded : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,10 +23,10 @@ namespace BlazorWebAppCamilla.Migrations
                 type: "datetime2",
                 nullable: true);
 
-            migrationBuilder.AddColumn<int>(
+            migrationBuilder.AddColumn<string>(
                 name: "UserAddressId",
                 table: "AspNetUsers",
-                type: "int",
+                type: "nvarchar(max)",
                 nullable: true);
 
             migrationBuilder.AddColumn<string>(
@@ -39,8 +39,7 @@ namespace BlazorWebAppCamilla.Migrations
                 name: "UserAddresses",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AddressType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AddressLine_1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AddressLine_2 = table.Column<string>(type: "nvarchar(max)", nullable: true),

@@ -1,6 +1,4 @@
-﻿
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace BlazorWebAppCamilla.Data;
 
@@ -10,10 +8,10 @@ public class ApplicationUserRepository(ApplicationDbContext context)
 
     public async Task<ApplicationUser> GetUserById(string userId)
     {
-       var result = await _context.Users
-            .Include(u => u.UserProfile)
-            .Include(u => u.UserAddress)
-            .FirstOrDefaultAsync(u => u.Id == userId);
+        var result = await _context.Users
+             .Include(u => u.UserProfile)
+             .Include(u => u.UserAddress)
+             .FirstOrDefaultAsync(u => u.Id == userId);
         return result!;
     }
 }

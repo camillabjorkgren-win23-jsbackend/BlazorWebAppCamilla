@@ -1,6 +1,7 @@
 using BlazorWebAppCamilla.Components;
 using BlazorWebAppCamilla.Components.Account;
 using BlazorWebAppCamilla.Data;
+using BlazorWebAppCamilla.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,9 @@ builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 builder.Services.AddScoped<ApplicationUserRepository>();
+builder.Services.AddScoped<UserAddressRepository>();
+builder.Services.AddScoped<UserProfileRepository>();
+builder.Services.AddScoped<UserDataService>();
 
 
 builder.Services.AddAuthentication(options =>

@@ -1,0 +1,245 @@
+﻿@attribute [StreamRendering]
+@rendermode InteractiveServer
+@inject UserProfileRepository UserProfileRepository
+@inject UserAddressRepository UserAddressRepository
+
+@if (!string.IsNullOrEmpty(@statusMessage))
+{
+    <div class="errormessage">
+        @statusMessage
+    </div>
+}
+
+<EditForm class="form-basicinfo form" method="post" FormName="DetailsForm" Model="DetailsForm" OnValidSubmit="OnValidSubmit" novalidate>
+    <DataAnnotationsValidator />
+    <div class="name">
+        <div class="first-name">
+            <label class="form-label">First name</label>
+            <div class="mb-3">
+                <InputText @bind-Value="DetailsForm.FirstName" class="form-control" />
+                <ValidationMessage For="() => DetailsForm.LastName" type="text" class="text-danger" />
+
+            </div>
+        </div>
+        <div class="last-name">
+            <label class="form-label">Last name</label>
+            <InputText @bind-Value="DetailsForm.LastName" type="text" class="form-control" />
+        </div>
+    </div>
+    <div class="contact-info">
+        <div class="email">
+            <label class="form-label">Email address</label>
+            <div class="mb-3">
+                <InputText class="form-control" type="email" @bind-Value="DetailsForm.Email" />
+                <ValidationMessage For="() =>DetailsForm.Email" class="text-danger" />
+            </div>
+        </div>
+        <div class="phone">
+            <label class="form-label">Phone<div class="optional">(optional) </div></label>
+            <InputText class="form-control" @bind-Value="DetailsForm.Phone" />
+            <ValidationMessage For="() =>DetailsForm.Phone" class="text-danger" />
+        </div>
+    </div>
+    <div class="bio">
+        <label class="form-label">Bio <div class="optional">(optional) </div></label>
+        <InputTextArea class="form-control" @bind-Value="DetailsForm.Bio" />
+        <ValidationMessage For="() =>DetailsForm.Bio" class="text-danger" />
+    </div>
+
+    <hr>
+
+    <div class="address">
+        <h6>Address info</h6>
+        <label class="form-label">Address line 1</label>
+        <div class="mb-3">
+            <InputText @bind-Value="DetailsForm.AddressLine_1" type="text" class="form-control" id="address" placeholder="Enter your address line" />
+            <ValidationMessage For="() =>DetailsForm.AddressLine_1" class="text-danger" />
+        </div>
+        <label asp-for="AddressInfoForm.AddressLine_2" class="form-label">Address line 2 <div class="optional">(optional) </div></label>
+        <div class="mb-3">
+            <InputText @bind-Value="DetailsForm.AddressLine_2" type="text" class="form-control" id="address2" placeholder="Enter your second address line" />
+            <ValidationMessage For="() =>DetailsForm.AddressLine_2" class="text-danger" />
+        </div>
+        <div class="postalcode-city">
+            <div class="postalcode">
+                <label class="form-label">Postal code</label>
+                <div class="mb-3">
+                    <InputText @bind-Value="DetailsForm.PostalCode" type="text" class="form-control" id="postalcode" placeholder="Enter your postal code" />
+                    <ValidationMessage For="() =>DetailsForm.PostalCode" class="text-danger" />
+                </div>
+            </div>
+            <div class="city">
+                <label class="form-label">City</label>
+                <div class="mb-3">
+                    <InputText @bind-Value="DetailsForm.City" type="text" class="form-control" id="City" placeholder="Enter your city" />
+                    <ValidationMessage For="() =>DetailsForm.City" class="text-danger" />
+                </div>
+            </div>
+        </div>
+        <div class="buttons">
+            <button @onclick="ClearForm">Clear form</button>
+            <button type="submit" class="button btn-theme">Save changes</button>
+        </div>
+    </div>
+    <ValidationSummary Model="@DetailsForm" />
+</EditForm>
+
+
+@code {
+    [SupplyParameterFromQuery]
+    public string statusMessage { get; set; } = "";
+
+    [Parameter]
+    public ApplicationUser User { get; set; }
+
+    [SupplyParameterFromForm]
+    private AccountDetailsForm DetailsForm { get; set; } = new();
+
+    private void ClearForm() => DetailsForm = new();
+
+    public class AccountDetailsForm
+    {
+        [Required(ErrorMessage = "A valid first name is required")]
+        [DataType(DataType.Text)]
+        [Display(Name = "First name", Prompt = "Enter your first name")]
+        public string FirstName { get; set; } = null!;
+
+        [Required(ErrorMessage = "A valid last name is required")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Last name", Prompt = "Enter your last name")]
+        public string LastName { get; set; } = null!;
+
+        [Required(ErrorMessage = "An valid email address is required")]
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "Email address", Prompt = "Enter your email address")]
+        public string Email { get; set; } = null!;
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Phone (optional)", Prompt = "Enter your phone number")]
+        public string? Phone { get; set; }
+
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Bio (optional)", Prompt = "Add a short bio... ")]
+        public string? Bio { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Address line 1", Prompt = "Enter your first address line")]
+        public string? AddressLine_1 { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Address line 2 (optional)", Prompt = "Enter your second address line")]
+        public string? AddressLine_2 { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "Postal code", Prompt = "Enter your postal code")]
+        public string? PostalCode { get; set; }
+
+        [DataType(DataType.Text)]
+        [Display(Name = "City", Prompt = "Enter your city")]
+        public string? City { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUserDataAsync();
+    }
+
+    private async Task<AccountDetailsForm> LoadUserDataAsync()
+    {
+        DetailsForm = new AccountDetailsForm
+            {
+                FirstName = User.UserProfile?.FirstName,
+                LastName = User.UserProfile?.LastName,
+                Email = User.Email,
+                Phone = User.PhoneNumber,
+                Bio = User.UserProfile.Bio,
+                AddressLine_1 = User.UserAddress?.AddressLine_1,
+                AddressLine_2 = User.UserAddress?.AddressLine_2,
+                PostalCode = User.UserAddress?.PostalCode,
+                City = User.UserAddress?.City,
+            };
+
+        return DetailsForm;
+    }
+
+
+
+
+
+    public async Task OnValidSubmit(EditContext editContext)
+    {
+        if (DetailsForm.FirstName != null && DetailsForm.LastName != null && DetailsForm.Email != null)
+        {
+            var user = await UserManager.FindByEmailAsync(DetailsForm.Email);
+            if (user != null)
+            {
+                if (user.UserProfile == null)
+                {
+                    user.UserProfile = new UserProfile
+                        {
+                            FirstName = DetailsForm.FirstName,
+                            LastName = DetailsForm.LastName,
+                            Bio = DetailsForm.Bio ?? ""
+                        };
+                    var userProfile = await UserProfileRepository.CreateUserProfileAsync(user.UserProfile);
+                    user.UserProfile.FirstName = userProfile.FirstName;
+                    user.UserProfile.LastName = userProfile.LastName;
+                    user.UserProfile.Bio = userProfile.Bio ?? "";
+                }
+                else
+                {
+                    user.UserProfile.FirstName = DetailsForm.FirstName;
+                    user.UserProfile.LastName = DetailsForm.LastName;
+                    user.UserProfile.Bio = DetailsForm.Bio;
+                }
+
+                if (user.UserAddress == null)
+                {
+                    user.UserAddress = new UserAddress
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            AddressType = "Home",
+                            AddressLine_1 = DetailsForm.AddressLine_1 ?? "",
+                            AddressLine_2 = DetailsForm.AddressLine_2 ?? "",
+                            PostalCode = DetailsForm.PostalCode ?? "",
+                            City = DetailsForm.City ?? ""
+                        };
+                    var userAddress = await UserAddressRepository.CreateUserAddressAsync(user.UserAddress);
+                    user.UserAddress.AddressLine_1 = userAddress.AddressLine_1;
+                    user.UserAddress.AddressLine_2 = userAddress.AddressLine_2;
+                    user.UserAddress.PostalCode = userAddress.PostalCode;
+                    user.UserAddress.City = userAddress.City;
+                    user.UserAddressId = userAddress.Id;
+                }
+                else
+                {
+                    user.UserAddress.AddressLine_1 = DetailsForm.AddressLine_1 ?? "";
+                    user.UserAddress.AddressLine_2 = DetailsForm.AddressLine_2 ?? "";
+                    user.UserAddress.PostalCode = DetailsForm.PostalCode ?? "";
+                    user.UserAddress.City = DetailsForm.City ?? "";
+                }
+                user.Email = DetailsForm.Email;
+                user.PhoneNumber = DetailsForm.Phone ?? "";
+                user.Modified = DateTime.Now;
+                
+                var result = await UserManager.UpdateAsync(user);
+
+                if (!result.Succeeded)
+                {
+                    statusMessage = "An error occured while updating the account details.";
+                    return;
+                }
+                else
+                {
+                    StateHasChanged();
+                    statusMessage = "Account details updated successfully.";
+                    return;
+                }
+            }
+            else
+            {
+                statusMessage = "User account could not be found.";
+            }
+        }
+    }
+}

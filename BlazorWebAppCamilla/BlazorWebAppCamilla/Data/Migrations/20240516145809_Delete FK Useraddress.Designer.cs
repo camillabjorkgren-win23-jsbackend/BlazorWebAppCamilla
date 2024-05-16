@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorWebAppCamilla.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240511123325_Profile and Address added")]
-    partial class ProfileandAddressadded
+    [Migration("20240516145809_Delete FK Useraddress")]
+    partial class DeleteFKUseraddress
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,8 +79,8 @@ namespace BlazorWebAppCamilla.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("UserAddressId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserAddressId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
@@ -99,6 +99,8 @@ namespace BlazorWebAppCamilla.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("UserAddressId");
+
                     b.HasIndex("UserProfileId");
 
                     b.ToTable("AspNetUsers", (string)null);
@@ -106,11 +108,8 @@ namespace BlazorWebAppCamilla.Migrations
 
             modelBuilder.Entity("BlazorWebAppCamilla.Data.UserAddress", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AddressLine_1")
                         .IsRequired()
@@ -123,10 +122,6 @@ namespace BlazorWebAppCamilla.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -136,9 +131,6 @@ namespace BlazorWebAppCamilla.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId")
-                        .IsUnique();
 
                     b.ToTable("UserAddresses");
                 });
@@ -302,22 +294,17 @@ namespace BlazorWebAppCamilla.Migrations
 
             modelBuilder.Entity("BlazorWebAppCamilla.Data.ApplicationUser", b =>
                 {
+                    b.HasOne("BlazorWebAppCamilla.Data.UserAddress", "UserAddress")
+                        .WithMany()
+                        .HasForeignKey("UserAddressId");
+
                     b.HasOne("BlazorWebAppCamilla.Data.UserProfile", "UserProfile")
                         .WithMany()
                         .HasForeignKey("UserProfileId");
 
+                    b.Navigation("UserAddress");
+
                     b.Navigation("UserProfile");
-                });
-
-            modelBuilder.Entity("BlazorWebAppCamilla.Data.UserAddress", b =>
-                {
-                    b.HasOne("BlazorWebAppCamilla.Data.ApplicationUser", "User")
-                        .WithOne("UserAddress")
-                        .HasForeignKey("BlazorWebAppCamilla.Data.UserAddress", "ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -369,11 +356,6 @@ namespace BlazorWebAppCamilla.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("BlazorWebAppCamilla.Data.ApplicationUser", b =>
-                {
-                    b.Navigation("UserAddress");
                 });
 #pragma warning restore 612, 618
         }

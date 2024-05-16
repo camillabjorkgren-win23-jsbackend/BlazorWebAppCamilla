@@ -4,6 +4,7 @@ using BlazorWebAppCamilla.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorWebAppCamilla.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240516110544_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,7 +80,7 @@ namespace BlazorWebAppCamilla.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserAddressId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
@@ -95,8 +98,6 @@ namespace BlazorWebAppCamilla.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("UserAddressId");
 
                     b.HasIndex("UserProfileId");
 
@@ -119,6 +120,10 @@ namespace BlazorWebAppCamilla.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -128,6 +133,9 @@ namespace BlazorWebAppCamilla.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId")
+                        .IsUnique();
 
                     b.ToTable("UserAddresses");
                 });
@@ -291,17 +299,22 @@ namespace BlazorWebAppCamilla.Migrations
 
             modelBuilder.Entity("BlazorWebAppCamilla.Data.ApplicationUser", b =>
                 {
-                    b.HasOne("BlazorWebAppCamilla.Data.UserAddress", "UserAddress")
-                        .WithMany()
-                        .HasForeignKey("UserAddressId");
-
                     b.HasOne("BlazorWebAppCamilla.Data.UserProfile", "UserProfile")
                         .WithMany()
                         .HasForeignKey("UserProfileId");
 
-                    b.Navigation("UserAddress");
-
                     b.Navigation("UserProfile");
+                });
+
+            modelBuilder.Entity("BlazorWebAppCamilla.Data.UserAddress", b =>
+                {
+                    b.HasOne("BlazorWebAppCamilla.Data.ApplicationUser", "User")
+                        .WithOne("UserAddress")
+                        .HasForeignKey("BlazorWebAppCamilla.Data.UserAddress", "ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -353,6 +366,11 @@ namespace BlazorWebAppCamilla.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BlazorWebAppCamilla.Data.ApplicationUser", b =>
+                {
+                    b.Navigation("UserAddress");
                 });
 #pragma warning restore 612, 618
         }
