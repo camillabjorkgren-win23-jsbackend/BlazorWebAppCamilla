@@ -31,10 +31,13 @@ else
             <p class="email">@User.Email</p>
         </div>
         <div class="btn-user">
-            <NavLink asp-controller="Account" asp-action="Index"><button class="button btn active"><i class="fa-light fa-gear i"></i> Account Details</button></NavLink>
-            <NavLink asp-action="AccountSecurity"><button class="button btn"><i class="fa-light fa-lock i"></i> Security</button></NavLink>
-            <NavLink asp-action="AccountSavedItems" asp-controller="Account"><button class="button btn"><i class="fa-light fa-bookmark i"></i> Saved Courses</button></NavLink>
-            <NavLink asp-controller="Auth" asp-action="signout" class="signout"><i class="fa-light fa-right-from-bracket i"></i> Sign Out</NavLink>
+            <NavLink href="/profile/details"><button class="button btn active"><i class="fa-light fa-gear i"></i> Account Details</button></NavLink>
+            <NavLink href="/profile/security"><button class="button btn"><i class="fa-light fa-lock i"></i> Security</button></NavLink>
+            <NavLink href="/profile/notifications"><button class="button btn"><i class="fa-sharp fa-light fa-bell"></i> Notifications</button></NavLink>
+            <NavLink href="/profile/messages"><button class="button btn"><i class="fa-light fa-messages"></i> Messages</button></NavLink>
+            <NavLink href="/profile/saveditems"><button class="button btn"><i class="fa-light fa-bookmark i"></i> Saved Items</button></NavLink>        
+            <NavLink href="/signout" class="signout"><i class="fa-light fa-right-from-bracket i"></i> Sign Out</NavLink>
+            
         </div>
     </div>
 }

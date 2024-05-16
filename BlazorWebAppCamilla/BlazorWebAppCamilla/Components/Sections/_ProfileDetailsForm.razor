@@ -1,96 +1,104 @@
-﻿@attribute [StreamRendering]
+﻿@page "/profile/details"
+
+@layout ManageLayout
+@attribute [StreamRendering]
 @rendermode InteractiveServer
+
 @inject UserProfileRepository UserProfileRepository
 @inject UserAddressRepository UserAddressRepository
+@inject UserDataService UserDataService
 
-@if (!string.IsNullOrEmpty(@statusMessage))
-{
-    <div class="errormessage">
-        @statusMessage
-    </div>
-}
+<div class="details-form">
+    <h2 class="title">Account Details</h2>
+    <h6>Basic info</h6>
 
-<EditForm class="form-basicinfo form" method="post" FormName="DetailsForm" Model="DetailsForm" OnValidSubmit="OnValidSubmit" novalidate>
-    <DataAnnotationsValidator />
-    <div class="name">
-        <div class="first-name">
-            <label class="form-label">First name</label>
-            <div class="mb-3">
-                <InputText @bind-Value="DetailsForm.FirstName" class="form-control" />
-                <ValidationMessage For="() => DetailsForm.LastName" type="text" class="text-danger" />
+    @if (!string.IsNullOrEmpty(@statusMessage))
+    {
+        <div class="errormessage">
+            @statusMessage
+        </div>
+    }
 
-            </div>
-        </div>
-        <div class="last-name">
-            <label class="form-label">Last name</label>
-            <InputText @bind-Value="DetailsForm.LastName" type="text" class="form-control" />
-        </div>
-    </div>
-    <div class="contact-info">
-        <div class="email">
-            <label class="form-label">Email address</label>
-            <div class="mb-3">
-                <InputText class="form-control" type="email" @bind-Value="DetailsForm.Email" />
-                <ValidationMessage For="() =>DetailsForm.Email" class="text-danger" />
-            </div>
-        </div>
-        <div class="phone">
-            <label class="form-label">Phone<div class="optional">(optional) </div></label>
-            <InputText class="form-control" @bind-Value="DetailsForm.Phone" />
-            <ValidationMessage For="() =>DetailsForm.Phone" class="text-danger" />
-        </div>
-    </div>
-    <div class="bio">
-        <label class="form-label">Bio <div class="optional">(optional) </div></label>
-        <InputTextArea class="form-control" @bind-Value="DetailsForm.Bio" />
-        <ValidationMessage For="() =>DetailsForm.Bio" class="text-danger" />
-    </div>
-
-    <hr>
-
-    <div class="address">
-        <h6>Address info</h6>
-        <label class="form-label">Address line 1</label>
-        <div class="mb-3">
-            <InputText @bind-Value="DetailsForm.AddressLine_1" type="text" class="form-control" id="address" placeholder="Enter your address line" />
-            <ValidationMessage For="() =>DetailsForm.AddressLine_1" class="text-danger" />
-        </div>
-        <label asp-for="AddressInfoForm.AddressLine_2" class="form-label">Address line 2 <div class="optional">(optional) </div></label>
-        <div class="mb-3">
-            <InputText @bind-Value="DetailsForm.AddressLine_2" type="text" class="form-control" id="address2" placeholder="Enter your second address line" />
-            <ValidationMessage For="() =>DetailsForm.AddressLine_2" class="text-danger" />
-        </div>
-        <div class="postalcode-city">
-            <div class="postalcode">
-                <label class="form-label">Postal code</label>
+    <EditForm class="form-basicinfo form" method="post" FormName="DetailsForm" Model="DetailsForm" OnValidSubmit="OnValidSubmit" novalidate>
+        <DataAnnotationsValidator />
+        <div class="name">
+            <div class="first-name">
+                <label class="form-label">First name</label>
                 <div class="mb-3">
-                    <InputText @bind-Value="DetailsForm.PostalCode" type="text" class="form-control" id="postalcode" placeholder="Enter your postal code" />
-                    <ValidationMessage For="() =>DetailsForm.PostalCode" class="text-danger" />
+                    <InputText @bind-Value="DetailsForm.FirstName" class="form-control" />
+                    <ValidationMessage For="() => DetailsForm.LastName" type="text" class="text-danger" />
+
                 </div>
             </div>
-            <div class="city">
-                <label class="form-label">City</label>
-                <div class="mb-3">
-                    <InputText @bind-Value="DetailsForm.City" type="text" class="form-control" id="City" placeholder="Enter your city" />
-                    <ValidationMessage For="() =>DetailsForm.City" class="text-danger" />
-                </div>
+            <div class="last-name">
+                <label class="form-label">Last name</label>
+                <InputText @bind-Value="DetailsForm.LastName" type="text" class="form-control" />
             </div>
         </div>
-        <div class="buttons">
-            <button @onclick="ClearForm">Clear form</button>
-            <button type="submit" class="button btn-theme">Save changes</button>
+        <div class="contact-info">
+            <div class="email">
+                <label class="form-label">Email address</label>
+                <div class="mb-3">
+                    <InputText class="form-control" type="email" @bind-Value="DetailsForm.Email" />
+                    <ValidationMessage For="() =>DetailsForm.Email" class="text-danger" />
+                </div>
+            </div>
+            <div class="phone">
+                <label class="form-label">Phone<div class="optional">(optional) </div></label>
+                <InputText class="form-control" @bind-Value="DetailsForm.Phone" />
+                <ValidationMessage For="() =>DetailsForm.Phone" class="text-danger" />
+            </div>
         </div>
-    </div>
-    <ValidationSummary Model="@DetailsForm" />
-</EditForm>
+        <div class="bio">
+            <label class="form-label">Bio <div class="optional">(optional) </div></label>
+            <InputTextArea class="form-control" @bind-Value="DetailsForm.Bio" />
+            <ValidationMessage For="() =>DetailsForm.Bio" class="text-danger" />
+        </div>
+
+        <hr>
+
+        <div class="address">
+            <h6>Address info</h6>
+            <label class="form-label">Address line 1</label>
+            <div class="mb-3">
+                <InputText @bind-Value="DetailsForm.AddressLine_1" type="text" class="form-control" id="address" placeholder="Enter your address line" />
+                <ValidationMessage For="() =>DetailsForm.AddressLine_1" class="text-danger" />
+            </div>
+            <label asp-for="AddressInfoForm.AddressLine_2" class="form-label">Address line 2 <div class="optional">(optional) </div></label>
+            <div class="mb-3">
+                <InputText @bind-Value="DetailsForm.AddressLine_2" type="text" class="form-control" id="address2" placeholder="Enter your second address line" />
+                <ValidationMessage For="() =>DetailsForm.AddressLine_2" class="text-danger" />
+            </div>
+            <div class="postalcode-city">
+                <div class="postalcode">
+                    <label class="form-label">Postal code</label>
+                    <div class="mb-3">
+                        <InputText @bind-Value="DetailsForm.PostalCode" type="text" class="form-control" id="postalcode" placeholder="Enter your postal code" />
+                        <ValidationMessage For="() =>DetailsForm.PostalCode" class="text-danger" />
+                    </div>
+                </div>
+                <div class="city">
+                    <label class="form-label">City</label>
+                    <div class="mb-3">
+                        <InputText @bind-Value="DetailsForm.City" type="text" class="form-control" id="City" placeholder="Enter your city" />
+                        <ValidationMessage For="() =>DetailsForm.City" class="text-danger" />
+                    </div>
+                </div>
+            </div>
+            <div class="buttons">
+                <button @onclick="ClearForm">Clear form</button>
+                <button type="submit" class="button btn-theme">Save changes</button>
+            </div>
+        </div>
+        <ValidationSummary Model="DetailsForm" />
+    </EditForm>
+</div>
 
 
 @code {
+    private ApplicationUser user = default!;
     [SupplyParameterFromQuery]
     public string statusMessage { get; set; } = "";
-
-    [Parameter]
-    public ApplicationUser User { get; set; }
 
     [SupplyParameterFromForm]
     private AccountDetailsForm DetailsForm { get; set; } = new();
@@ -141,29 +149,41 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadUserDataAsync();
+     
+            await LoadUserDataAsync();
     }
 
     private async Task<AccountDetailsForm> LoadUserDataAsync()
     {
-        DetailsForm = new AccountDetailsForm
-            {
-                FirstName = User.UserProfile?.FirstName,
-                LastName = User.UserProfile?.LastName,
-                Email = User.Email,
-                Phone = User.PhoneNumber,
-                Bio = User.UserProfile.Bio,
-                AddressLine_1 = User.UserAddress?.AddressLine_1,
-                AddressLine_2 = User.UserAddress?.AddressLine_2,
-                PostalCode = User.UserAddress?.PostalCode,
-                City = User.UserAddress?.City,
-            };
+        try
+        {
+            user = await UserDataService.GetUserDataAsync();
 
-        return DetailsForm;
+            DetailsForm = new AccountDetailsForm
+                {
+                    FirstName = user.UserProfile?.FirstName,
+                    LastName = user.UserProfile?.LastName,
+                    Email = user.Email,
+                    Phone = user.PhoneNumber,
+                    Bio = user.UserProfile.Bio,
+                    AddressLine_1 = user.UserAddress?.AddressLine_1,
+                    AddressLine_2 = user.UserAddress?.AddressLine_2,
+                    PostalCode = user.UserAddress?.PostalCode,
+                    City = user.UserAddress?.City,
+                };
+
+            return DetailsForm;
+        }
+
+
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return null;
+        }
+
+
     }
-
-
-
 
 
     public async Task OnValidSubmit(EditContext editContext)
@@ -221,7 +241,7 @@
                 user.Email = DetailsForm.Email;
                 user.PhoneNumber = DetailsForm.Phone ?? "";
                 user.Modified = DateTime.Now;
-                
+
                 var result = await UserManager.UpdateAsync(user);
 
                 if (!result.Succeeded)

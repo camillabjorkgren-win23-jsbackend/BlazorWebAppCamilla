@@ -1,0 +1,146 @@
+﻿@page "/profile/security"
+@layout ManageLayout
+
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+@inject UserManager<ApplicationUser> UserManager
+@inject UserDataService UserDataService
+
+
+<div class="content">
+    <div class="password-form">
+        <h2 class="title">Security</h2>
+        <h6>Password</h6>
+
+        @if (!string.IsNullOrEmpty(@statusMessage))
+        {
+            <div class="errormessage">
+                @statusMessage
+            </div>
+        }
+        <EditForm class="form-password form" method="post" Model="PasswordForm" FormName="ChangePassword" OnValidSubmit="SubmitPassword" novalidate>
+            <DataAnnotationsValidator />
+            <div class="current-password">
+                <label class="form-label">Current password</label>
+                <div class="mb-3">
+                    <InputText @bind-Value="PasswordForm.CurrentPassword" type="password" class="form-control" />
+                    <ValidationMessage For="() =>PasswordForm.CurrentPassword" class="text-danger" />
+                </div>
+            </div>
+
+            <div class="create-new-password">
+                <div class="new-password">
+                    <label class="form-label">New password</label>
+                    <InputText @bind-Value="PasswordForm.NewPassword" type="password" id="new-password" class="form-control" />
+                    <ValidationMessage For="() =>PasswordForm.NewPassword" class="text-danger" />
+                </div>
+
+                <div class="confirm-password">
+                    <label class="form-label">Confirm new password</label>
+                    <InputText @bind-Value="PasswordForm.ConfirmPassword" type="password" class="form-control" />
+                    <ValidationMessage For="() =>PasswordForm.ConfirmPassword" class="text-danger" />
+                </div>
+            </div>
+            <div class="buttons">
+                <button type="reset" class="button btn-gray">Cancel</button>
+                <button type="submit" class="button btn-theme">Change Password</button>
+            </div>
+        </EditForm>
+
+        <hr>
+    </div>
+
+    <div class="delete-account">
+        <h6>Delete account</h6>
+        <p>When you delete your account, your public profile will be deactivated immediately. If you change your mind before the 14 days are up, sign in with your email and password, and we’ll send you a link to reactivate your account.</p>
+        <EditForm class="form" method="post" Model="DeleteAccount" OnValidSubmit="SubmitDelete">
+             <DataAnnotationsValidator/>
+            <div class="checkbox-group">
+                <InputCheckbox @bind-Value="DeleteAccount.CheckDeleteAccount" />
+                <label>Yes, I want to delete my account.</label>
+            </div>
+            <button type="submit" class="button btn-red">Delete</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public string statusMessage { get; set; } = "";
+
+    public PasswordFormModel PasswordForm { get; set; } = new();
+
+    public DeleteAccountModel DeleteAccount { get; set; } = new();
+
+    public class PasswordFormModel
+    {
+        [DataType(DataType.Password)]
+        [Display(Name = "Current password", Prompt = "********", Order = 0)]
+        [Required(ErrorMessage = "You need to enter your current password")]
+        public string CurrentPassword { get; set; } = null!;
+
+        [DataType(DataType.Password)]
+        [Display(Name = "New password", Prompt = "********", Order = 1)]
+        [Required(ErrorMessage = "A strong password is required")]
+        [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[@$!%*?&])[a-zA-Z0-9@$!%*?&]{8,}$", ErrorMessage = "Invalid password, must be a strong password")]
+        public string NewPassword { get; set; } = null!;
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password", Prompt = "Confirm your password", Order = 2)]
+        [Required(ErrorMessage = "Password must be confirmed")]
+        [Compare(nameof(NewPassword), ErrorMessage = "Fields do not match")]
+        public string ConfirmPassword { get; set; } = null!;
+    }
+
+
+    public class DeleteAccountModel
+    {
+        [Display(Name = "Yes, I want to delete my account.", Order = 3)]
+        [Required(ErrorMessage = "You must check the box to proceed")]
+        public bool CheckDeleteAccount { get; set; } = false;
+    }
+
+    private async Task SubmitPassword()
+    {
+        ApplicationUser user = await UserDataService.GetUserDataAsync();
+        if (user != null)
+        {
+            var passwordResult = UserManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash!, PasswordForm.CurrentPassword);
+            if (passwordResult == PasswordVerificationResult.Success)
+            {
+                var result = await UserDataService.UpdatePasswordAsync(user, PasswordForm.NewPassword);
+                if (!result)
+                {
+                    statusMessage = "An error occurred during a try to change password, please try again";
+                }
+                statusMessage = "Password changed successfully";
+
+            }
+            else
+            {
+                statusMessage = "Current password is incorrect";
+            }
+        }
+    }
+
+    private async Task SubmitDelete()
+    {
+        ApplicationUser user = await UserDataService.GetUserDataAsync();
+        if (user != null)
+        {
+            var response = await UserDataService.DeleteAccount(user, DeleteAccount.CheckDeleteAccount);
+            if (response)
+            {
+                await SignInManager.SignOutAsync();
+                NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+                statusMessage = "An error occurred, please try again";
+            }
+        }
+    }
+
+   
+}
+
