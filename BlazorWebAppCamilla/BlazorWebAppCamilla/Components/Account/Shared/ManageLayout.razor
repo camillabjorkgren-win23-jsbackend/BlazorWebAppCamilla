@@ -1,5 +1,6 @@
-﻿@inherits LayoutComponentBase
-@layout AccountLayout
+﻿@using BlazorWebAppCamilla.Components.Layout
+@inherits LayoutComponentBase
+@layout MainLayout
 
 @attribute [StreamRendering]
 @inject UserDataService UserDataService
@@ -36,7 +37,9 @@
     [SupplyParameterFromQuery]
     public string statusMessage { get; set; } = "";
 
-    private ApplicationUser user = default!;
+    [CascadingParameter]
+    public ApplicationUser user { get; set; }
+
     private MultipartFormDataContent uploadModel = new MultipartFormDataContent();
     private IBrowserFile? selectedFile;
 
@@ -72,19 +75,19 @@
         }
 
     }
-    protected override async Task OnInitializedAsync()
-    {
+    // protected override async Task OnInitializedAsync()
+    // {
 
-        try
-        {
-            user = await UserDataService.GetUserDataAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+    //     // try
+    //     // {
+    //     //     user = await UserDataService.GetUserDataAsync();
+    //     // }
+    //     // catch (Exception ex)
+    //     // {
+    //     //     Console.WriteLine(ex.Message);
+    //     // }
 
-    }
+    // }
 }
 
 

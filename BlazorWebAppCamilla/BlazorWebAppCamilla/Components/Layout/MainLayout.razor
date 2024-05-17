@@ -1,9 +1,45 @@
 ﻿@inherits LayoutComponentBase
+@inject ThemeService ThemeService
+@inject UserDataService UserDataService
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+
+@code {
+    // [CascadingParameter]
+    public ApplicationUser user {get; set; } 
+
+    public static class AppState
+    {
+        public static bool IsDarkMode { get; set; }
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+     
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            user = await UserDataService.GetUserDataAsync();
+            AppState.IsDarkMode = user?.DarkMode ?? false;           
+        }
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            await JS.InvokeVoidAsync("updateTheme", AppState.IsDarkMode ? "dark" : "light");
+        }
+    }
+ 
+}
+<CascadingValue Value="user">
 <div class="wrapper">
     <_Header />
     @Body
     <_Footer />
 </div>
+</CascadingValue>
 <div id="blazor-error-ui">
     An unhandled error has occurred.
     <a href="" class="reload">Reload</a>

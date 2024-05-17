@@ -12,4 +12,7 @@ public class ApplicationUser : IdentityUser
 
     public string? UserAddressId { get; set; }
     public UserAddress? UserAddress { get; set; }
+    public string? PreferredEmail { get; set; }
+    public bool SubscribeNewsletter { get; set; } = false;
+    public bool DarkMode { get; set; } = false;
 }

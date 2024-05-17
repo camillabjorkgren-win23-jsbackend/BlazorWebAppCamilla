@@ -23,6 +23,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAu
 builder.Services.AddScoped<ApplicationUserRepository>();
 builder.Services.AddScoped<UserAddressRepository>();
 builder.Services.AddScoped<UserProfileRepository>();
+builder.Services.AddScoped<ThemeService>();
 
 builder.Services.AddScoped<UserDataService>();
 

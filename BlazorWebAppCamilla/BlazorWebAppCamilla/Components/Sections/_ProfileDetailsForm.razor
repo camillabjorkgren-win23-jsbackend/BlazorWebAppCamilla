@@ -1,9 +1,11 @@
 ﻿@page "/profile/details"
+@using static BlazorWebAppCamilla.Components.Layout.MainLayout
 
 @layout ManageLayout
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 
+@inject ThemeService ThemeService
 @inject UserProfileRepository UserProfileRepository
 @inject UserAddressRepository UserAddressRepository
 @inject UserDataService UserDataService
@@ -96,7 +98,8 @@
 
 
 @code {
-    private ApplicationUser user = default!;
+    [CascadingParameter]
+    public ApplicationUser user { get; set; }
     [SupplyParameterFromQuery]
     public string statusMessage { get; set; } = "";
 
@@ -148,8 +151,7 @@
     }
 
     protected override async Task OnInitializedAsync()
-    {
-     
+    {   
             await LoadUserDataAsync();
     }
 
@@ -181,8 +183,6 @@
             Console.WriteLine(ex.Message);
             return null;
         }
-
-
     }
 
 

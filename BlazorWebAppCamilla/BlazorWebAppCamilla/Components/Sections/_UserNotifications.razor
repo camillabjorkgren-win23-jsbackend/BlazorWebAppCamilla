@@ -4,10 +4,152 @@
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 
+@inject UserDataService UserDataService
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ThemeService ThemeService
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
 
+<div class="content">
+    <div class="password-form">
+        <h2 class="title">Notifications</h2>
+        
+
+        @if (!string.IsNullOrEmpty(@statusMessage))
+        {
+            <div class="errormessage">
+                @statusMessage
+            </div>
+        }
+        <EditForm class="form" method="post" Model="Notifications" FormName="PreferredNotifications" OnValidSubmit="SubmitNotifications" novalidate>
+            <DataAnnotationsValidator />
+            <div class="current-password">
+                <label class="form-label">Preferred email for notifications</label>
+                <div class="mb-3">
+                    <InputText @bind-Value="Notifications.Email" type="email" class="form-control" />
+                    <ValidationMessage For="() =>Notifications.Email" class="text-danger" />
+                </div>
+            </div>
+
+            <div id="newsletter-switch" class="btn-switch">
+                <label class="switch" for="newsletter-switch-mode">
+                    <InputCheckbox @bind-Value="Notifications.SubscribeNewsletter" type="checkbox" id="newsletter-switch-mode" />
+                    <span class="slider round"></span>
+                </label>
+                <label>Subscribe to Newsletter</label>
+            </div>
+
+            <div id="theme-switch" class="btn-switch">
+                <label class="switch" for="theme-switch-mode">
+                    <InputCheckbox @bind-Value="Notifications.DarkMode" checked="@isDarkMode" type="checkbox" id="theme-switch-mode" />
+                    <span class="slider round"></span>
+                </label>
+                <label>Use Dark Mode Theme in Application</label>
+            </div>
+
+
+            <div class="buttons">
+                <button type="reset" class="button btn-gray">Cancel</button>
+                <button type="submit" class="button btn-theme">Save Changes</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
 
 
 
 @code {
+    private bool isDarkMode = false;
+    [SupplyParameterFromQuery]
+    public string statusMessage { get; set; } = "";
 
+    public NotificationsFormModel Notifications { get; set; } = new();
+
+    public class NotificationsFormModel
+    {
+        [Required(ErrorMessage = "An valid email address is required")]
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "Email address", Prompt = "Enter your email address", Order = 0)]
+        public string Email { get; set; } = null!;
+
+        [Display(Name = "Subscribe to newsletter", Order = 1)]
+        public bool SubscribeNewsletter { get; set; } = false;
+
+
+        [Display(Name = "Use Dark Mode Theme in Application", Order = 2)]
+        public bool DarkMode { get; set; } = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        isDarkMode = await ThemeService.GetThemeAsync();
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await UserManager.GetUserAsync(authState.User);
+
+        if (user != null && user.PreferredEmail != null)
+        {
+            Notifications.Email = user.PreferredEmail;
+            Notifications.SubscribeNewsletter = user.SubscribeNewsletter;
+            Notifications.DarkMode = user.DarkMode;
+        }
+    }
+
+
+
+    private async Task SubmitNotifications()
+    {
+        ApplicationUser user = await UserDataService.GetUserDataAsync();
+        if (user != null)
+        {
+            user.PreferredEmail = Notifications.Email;
+            user.SubscribeNewsletter = Notifications.SubscribeNewsletter;
+            user.DarkMode = Notifications.DarkMode;
+
+            var result = await UserManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                var theme = user.DarkMode ? "dark" : "light";
+                await JS.InvokeVoidAsync("updateTheme", theme);
+
+                StateHasChanged();
+
+
+                statusMessage = "Account notifications updated successfully.";
+                return;
+            }
+            else
+            {
+                statusMessage = "An error occured while updating the account notifications.";
+                return;
+            }
+        }
+    }
+
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     ApplicationUser user = await UserDataService.GetUserDataAsync();
+    //     var theme = user.DarkMode ? "dark" : "light";
+    //     if (!firstRender)
+    //     {
+    //         await JS.InvokeVoidAsync("updateTheme", theme);
+    //     }
+    // }
+    // private async Task ToggleTheme(string mode)
+    // {
+    //     var response = await HttpClient.GetAsync($"/sitesettings/changetheme?mode={mode}");
+    //     if (response.IsSuccessStatusCode)
+    //     {
+    //         // Tema ändrat på servern, uppdatera klientens temaläge
+    //         isDarkMode = mode == "dark"; // Uppdatera en lokal variabel för temaläge
+    //         await IJSRuntime.("updateTheme", mode); // Kör JavaScript-funktion för att uppdatera temat i SCSS
+    //     }
+    //     else
+    //     {
+    //         Console.WriteLine("Failed to change theme.");
+    //     }
+    // }
 }

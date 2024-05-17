@@ -13,7 +13,9 @@ else
 }
 
 @code {
-  
+    [CascadingParameter]
+    public ApplicationUser user { get; set; }
+
     [CascadingParameter]
     private HttpContext? HttpContext { get; set; }
 
