@@ -15,12 +15,17 @@ public class Course
     public string? Likes { get; set; }
     public string? LikesInProcent { get; set; }
     public int Hours { get; set; }
-    public string[] Authors { get; set; } = null!;
+    public Author[] Authors { get; set; } = null!;
     public Prices Prices { get; set; } = null!;
     public Content? Content { get; set; }
 }
 
 
+public class Author
+{
+    public decimal Price { get; set; }
+    public decimal Discount { get; set; }
+}
 public class Prices
 {
     public decimal Price { get; set; }
