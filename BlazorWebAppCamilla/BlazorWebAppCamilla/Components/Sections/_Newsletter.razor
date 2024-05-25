@@ -71,9 +71,13 @@
     {
         try
         {
-            var result = await Http.PostAsJsonAsync("https://newsletterprovider-silicon-camilla.azurewebsites.net/api/Subscribe?code=xlAYAvA90Wpgn_ZFyyYauReZ4dKASqe5ZrhsD6WPrcWeAzFuUYC8iA==", SubscribeForm);
-            if (result.IsSuccessStatusCode)
+            var result = await Http.PostAsJsonAsync("https://newsletterprovider-silicon-camilla.azurewebsites.net/api/Subscribe?code=xlAYAvA90Wpgn_ZFyyYauReZ4dKASqe5ZrhsD6WPrcWeAzFuUYC8iA%3D%3D", SubscribeForm);
+             if (result.IsSuccessStatusCode)
                 StatusMessage = "Thank you for subscribing!";
+            else
+            {
+                StatusMessage= "Unable to subscribe right now. Please try again later.";
+            }
         }
         catch 
         {

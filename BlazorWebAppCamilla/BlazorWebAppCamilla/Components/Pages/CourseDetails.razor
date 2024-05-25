@@ -1,190 +1,256 @@
-﻿@* @model CourseModel
+﻿@page "/courses/details/{courseId}"
+@using BlazorWebAppCamilla.Models
 
-@{
-    ViewData["Title"] = Model.Title;
-    var user = await UserManager.GetUserAsync(User);
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+
+@inject CourseService CourseService
+@inject UserDataService UserDataService
+@if (course == null)
+{
+    <p>Loading...</p>
 }
-<section class="course-details">
-    <div class="img-header">
-        <img src="~/images/Courses/@Model.ImageName" alt="">
-    </div>
-    <div class="container">
-        @if (!string.IsNullOrEmpty(ViewData["Error"]?.ToString()))
-        {
-            <div class="alert-danger">@ViewData["Error"]</div>
-        }
-        <div class="text-header">
-
-            <div class="bread-crumbs">
-                <a asp-action="Index" asp-controller="Home"><i class="fa-light fa-house"></i>Home</a><i class="fa-solid fa-angles-right"></i><a asp-action="courses">Courses</a><i class="fa-solid fa-angles-right"></i><a asp-route-id="@Model.Id">@Model.Title</a>
-            </div>
-            <div class="title-description">
-                <div class="labels">
-                    @if (Model.IsBestSeller)
-                    {
-                        <div class="bestseller">
-                            Best Seller
-                        </div>
-                    }
-                    @if (Model.IsDigital)
-                    {
-                        <div class="digital">
-                            Digital
-                        </div>
-                    }
-                </div>
-                <h1 class="title">@Model.Title</h1>
-                <p class="text">Egestas feugiat lorem eu neque suspendisse ullamcorper scelerisque aliquam mauris.</p>
-                <div class="info">
-                    <div class="stars">
-                        <i class="fa-solid fa-star" style="color: #FFBA08;"></i> *@
-                      @*   <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
-                        <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
-                        <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
-                        <i class="fa-regular fa-star" style="color: #B4B7C9;"></i>
-                    </div>
-                    <div class="thumbs">
-                        <i class="fa-light fa-thumbs-up" style="color: #B4B7C9;"></i> <span>@($"{(decimal)(Model.UserVotes ?? 0) / 1000:0.#}K Likes")</span>
-                    </div>
-                    <div class="hours"><i class="fa-regular fa-clock" style="color: #B4B7C9;"></i> <span>@Model.EstimatedHours hours</span></div>
-                </div>
-                <div class="creator">
-                    <img src="~/images/profile-image.svg" alt="">
-                    <div class="created">Created by</div>
-                    <div class="creator-name">@Model.Creator</div>
-                </div>
-            </div>
-
+else
+{
+    <section class="course-details">
+        <div class="img-header">
+            <img src="@course.ImageUri" alt="">
         </div>
-        <div class="content">
-            <div class="description">
-                <div class="description-title">
-                    <h1>Course Description</h1>
-                    <p>Suspendisse natoque sagittis, consequat turpis. Sed tristique tellus morbi magna. At vel senectus accumsan, arcu mattis id tempor. Tellus sagittis, euismod porttitor sed tortor est id. Feugiat velit velit, tortor ut. Ut libero cursus nibh lorem urna amet tristique leo. Viverra lorem arcu nam nunc at ipsum quam. A proin id sagittis dignissim mauris condimentum ornare. Tempus mauris sed dictum ultrices.</p>
+        <div class="container">
+            @if (!string.IsNullOrWhiteSpace(StatusMessage))
+            {
+                <p>@StatusMessage</p>
+            }
+            <div class="text-header">
+
+                <div class="bread-crumbs">
+                    <a href="/"><i class="fa-light fa-house"></i>Home</a><i class="fa-solid fa-angles-right"></i><a href="/courses">Courses</a><i class="fa-solid fa-angles-right"></i><a href="/course/details/@course.Id">@course.Title</a>
                 </div>
-                <div class="learn">
-                    <h3>What you'll learn</h3>
-                    <div class="learnlist">
-                        <i class="fa-regular fa-circle-check" style="color: #6366f1;"></i>
-                        <p>Sed lectus donec amet eu turpis interdum.</p>
+                <div class="title-description">
+                    <div class="labels">
+                        @if (course.IsBestseller)
+                        {
+                            <div class="bestseller">
+                                Best Seller
+                            </div>
+                        }
+                        @if (course.IsDigital)
+                        {
+                            <div class="digital">
+                                Digital
+                            </div>
+                        }
                     </div>
-                    <div class="learnlist">
-                        <i class="fa-regular fa-circle-check" style="color: #6366f1;"></i>
-                        <p>Nulla at consectetur vitae dignissim porttitor.</p>
+                    <h1 class="title">@course.Title</h1>
+                    <p class="text">@course.Ingress</p>
+                    <div class="info">
+                        <div class="stars">
+                            @if (course.StarRating == 1)
+                            {
+                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
+                            }
+                            else if (course.StarRating == 2)
+                            {
+                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
+                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
+                            }
+                            else if (course.StarRating == 3)
+                            {
+                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
+                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
+                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
+                            }
+                            else if (course.StarRating == 4)
+                            {
+                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
+                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
+                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
+                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
+                            }
+                            else if (course.StarRating == 5)
+                            {
+                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
+                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
+                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
+                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
+                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
+                            }
+                        </div>
+
+                        <div class="thumbs">
+                            <i class="fa-light fa-thumbs-up" style="color: #B4B7C9;"></i> <span>@course.Likes Likes</span>
+                        </div>
+                        <div class="hours"><i class="fa-regular fa-clock" style="color: #B4B7C9;"></i> <span>@course.Hours hours</span></div>
                     </div>
-                    <div class="learnlist">
-                        <i class="fa-regular fa-circle-check" style="color: #6366f1;"></i>
-                        <p>Phasellus id vitae dui aliquet mi.</p>
-                    </div>
-                    <div class="learnlist">
-                        <i class="fa-regular fa-circle-check" style="color: #6366f1;"></i> *@
-              @*           <p>Integer cursus vitae, odio feugiat iaculis aliquet diam, et purus.</p>
-                    </div>
-                    <div class="learnlist">
-                        <i class="fa-regular fa-circle-check" style="color: #6366f1;"></i>
-                        <p>In aenean dolor diam tortor orci eu.</p>
+                    <div class="creator">
+                        @foreach (var author in course.Authors)
+                        {
+                            <img src="@author.AuthorImage" alt="">
+                            <div class="created">Created by</div>
+                            <div class="creator-name">@author.Name</div>
+                        }
+
+
                     </div>
                 </div>
+
             </div>
-            <div class="aside-info">
-                <h4>This course includes:</h4>
-                <div class="info"><i class="fa-regular fa-display"></i><p>148 hours on-demand video</p></div>
+            <div class="content">
+                <div class="description">
+                    <div class="description-title">
+                        <h1>Course Description</h1>
+                        @course.Content.Description
+                    </div>
+                </div>
+
+
+                <div class="aside-info">
+
+                    <h4>This course includes:</h4>
+                    @foreach (var include in course.Content.Includes)
+                    {
+                        <div class="info"><i class="fa-regular fa-display"></i><p>@include</p></div>
+                    }
+                    @* <i class="fa-regular fa-display"></i><p>148 hours on-demand video</p></div>
                 <div class="info"><i class="fa-light fa-newspaper"></i>18 articles</div>
                 <div class="info"><i class="fa-regular fa-download"></i>25 downloadable resources</div>
                 <div class="info"><i class="fa-regular fa-infinity"></i>Full lifetime access</div>
-                <div class="info"><i class="fa-light fa-file-certificate"></i> Certificate of completion</div>
-                <div class="prices">
-                    @if (Model.DiscountPrice > 0)
-                    {
-                        <h2 class="current-price">$@Model.DiscountPrice</h2>
-                        <h4 class="original-price">$@Model.Price</h4>
-                    }
-                    else
-                    {
-                        <h2 class="current-price">$@Model.Price</h2>
-                    }
+                <div class="info"><i class="fa-light fa-file-certificate"></i> Certificate of completion</div> *@
+
+
+                    <div class="prices">
+                        @if (course.Prices.Discount > 0)
+                        {
+                            <h2 class="current-price">@course.Prices.Currency @course.Prices.Discount</h2>
+                            <h4 class="original-price">@course.Prices.Currency @course.Prices.Price</h4>
+                        }
+                        else
+                        {
+                            <h2 class="current-price">@course.Prices.Currency @course.Prices.Price</h2>
+                        }
+                    </div>
+
+
+                    <EditForm FormName="JoinCourse" Model="userCourses" OnValidSubmit="HandleJoinCourse" novalidate>
+                        <InputText type="hidden" name="userId" @bind-Value="@user.Id" />
+                        <InputText type="hidden" name="courseId" @bind-Value="@course.Id" />
+                        <button class="btn btn-theme-s" type="submit">Join course</button>
+                    </EditForm>
                 </div>
-                <form asp-action="JoinCourse" asp-controller="Account" method="post">
-                    <input type="hidden" name="userId" value="@user!.Id" />
-                    <input type="hidden" name="courseId" value="@Model.Id" />
-                    <button class="btn btn-theme-s" type="submit">Join course</button>
-                </form> *@
-               @*  <button class="btn btn-theme-s" type="button" asp-action="AccountSavedItems" asp-controller="Account" asp-route-userId="@user!.Id" asp-route-courseId="@Model.Id">Join course</button> *@
-       @*     
-            @if (User.IsInRole("CIO") && user != null)
+
+                @* @if (User.IsInRole("CIO") && user != null)
             {
-                <div class="aside-info-admin">
-                    <h5>Admin panel</h5>
-                    <div class="admin-badge">
-                        <i class="fa-sharp fa-solid fa-id-badge"></i>
-                        <h5>@user.FirstName @user.LastName</h5>
-                    </div>
-                    
+            <div class="aside-info-admin">
+            <h5>Admin panel</h5>
+            <div class="admin-badge">
+            <i class="fa-sharp fa-solid fa-id-badge"></i>
+            <h5>@user.FirstName @user.LastName</h5>
+            </div>
+
+            <div class="buttons">
+            <a asp-action="UpdateCourse" asp-controller="admin" asp-route-id="@Model.Id"><button class="btn btn-gray" type="button">Update Course</button></a>
+            <a asp-action="DeleteCourse" asp-controller="admin" asp-route-id="@Model.Id"><button class="btn btn-red" type="submit">Delete Course</button></a>
+            </div>
+
+            </div>
+            } *@
+                <div class="details">
+                    <h2>Program Details</h2>
+                    @foreach (var detail in course.Content.ProgramDetails)
+                    {
+                        <div class="detail">
+                            <div class="number"><h2>@detail.Id</h2></div>
+                            <div class="divider"></div>
+                            <h3 class="detail-title">@detail.Title</h3>
+                            <p class="text">@detail.Description</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="creator-info">
+                <img id="pattern" src="/images/Courses/pattern.svg" alt="">
+                <div class="creator-img">
+                    @foreach (var author in course.Authors)
+                    {
+                        <img src="@author.AuthorImage" alt="@author.Name">
+                    }
+                </div>
+
+                <div class="creator-text">
+                    <p>Learn from the best</p>
+                    @foreach (var author in course.Authors)
+                    {
+                        <h2>@author.Name</h2>
+                    })
+
+                    <p>@course.Reviews</p>
                     <div class="buttons">
-                        <a asp-action="UpdateCourse" asp-controller="admin" asp-route-id="@Model.Id"><button class="btn btn-gray" type="button">Update Course</button></a>
-                        <a asp-action="DeleteCourse" asp-controller="admin" asp-route-id="@Model.Id"><button class="btn btn-red" type="submit">Delete Course</button></a>
+                        <button class="btn-red"><i class="fa-brands fa-youtube" style="color: #ffffff;"></i> 240k subscribers</button>
+                        <button class="btn-theme"><i class="fa-brands fa-facebook" style="color: #ffffff;"></i> 180k followers</button>
                     </div>
                 </div>
-            }
-
-            <div class="details">
-                <h2>Program Details</h2>
-                <div class="detail">
-                    <div class="number"><h2>1</h2></div>
-                    <div class="divider"></div>
-                    <h3 class="detail-title">Introduction. Getting started</h3>
-                    <p class="text">Nulla faucibus mauris pellentesque blandit faucibus non. Sit ut et at suspendisse gravida hendrerit tempus placerat.</p>
-                </div>
-                <div class="detail">
-                    <div class="number"><h2>2</h2></div>
-                    <div class="divider"></div>
-                    <h3 class="detail-title">The ultimate HTML developer: advanced HTML</h3>
-                    <p class="text">Lobortis diam elit id nibh ultrices sed penatibus donec. Nibh iaculis eu sit cras ultricies. Nam eu eget etiam egestas donec scelerisque ut ac enim. Vitae ac nisl, enim nec accumsan vitae est.</p>
-                </div>
-                <div class="detail">
-                    <div class="number"><h2>3</h2></div>
-                    <div class="divider"></div>
-                    <h3 class="detail-title">CSS & CSS3: basic</h3>
-                    <p class="text">Duis euismod enim, facilisis risus tellus pharetra lectus diam neque. Nec ultrices mi faucibus est. Magna ullamcorper potenti elementum ultricies auctor nec volutpat augue.</p>
-                </div>
-                <div class="detail">
-                    <div class="number"><h2>4</h2></div>
-                    <div class="divider"></div>
-                    <h3 class="detail-title">JavaScript basics for beginners</h3>
-                    <p class="text">Morbi porttitor risus imperdiet a, nisl mattis. Amet, faucibus eget in platea vitae, velit, erat eget velit. At lacus ut proin erat.</p>
-                </div>
-                <div class="detail">
-                    <div class="number"><h2>5</h2></div>
-                    <div class="divider"></div>
-                    <h3 class="detail-title">Understanding APIs</h3>
-                    <p class="text">Risus morbi euismod in congue scelerisque fusce pellentesque diam consequat. Nisi mauris nibh sed est morbi amet arcu urna. Malesuada feugiat quisque consectetur elementum diam vitae. Dictumst facilisis odio eu quis maecenas risus odio fames bibendum.</p>
-                </div>
-                <div class="detail">
-                    <div class="number"><h2>6</h2></div>
-                    <h3 class="detail-title">C# and .NET from beginner to advanced</h3>
-                    <p class="text">Quis risus quisque diam diam. Volutpat neque eget eu faucibus sed urna fermentum risus. Est, mauris morbi nibh massa.</p>
-                </div>
             </div>
         </div>
-        <div class="creator-info">
-            <img id="pattern" src="~/images/Courses/pattern.svg" alt="">
-            <div class="creator-img">
-                <img src="~/images/Courses/Course2.svg" alt="">
-            </div>
-            <div class="creator-text">
-                <p>Learn from the best</p>
-                <h2>@Model.Creator</h2>
-                <p>Dolor ipsum amet cursus quisque porta adipiscing. Lorem convallis malesuada sed maecenas. Ac dui at vitae mauris cursus in nullam porta sem. Quis pellentesque elementum ac bibendum. Nunc aliquam in tortor facilisis. Vulputate eget risus, metus phasellus. Pellentesque faucibus amet, eleifend diam quam condimentum convallis ultricies placerat. Duis habitasse placerat amet, odio pellentesque rhoncus, feugiat at. Eget pellentesque tristique felis magna fringilla.</p>
-                <div class="buttons">
-                    <button class="btn-red"><i class="fa-brands fa-youtube" style="color: #ffffff;"></i> 240k subscribers</button>
-                    <button class="btn-theme"><i class="fa-brands fa-facebook" style="color: #ffffff;"></i> 180k followers</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+    </section>
 
- *@
+    <div>@user.Email</div>
+}
+
+
 @code {
+    [Parameter]
+    public string? courseId { get; set; }
 
+    [SupplyParameterFromQuery]
+    public string StatusMessage { get; set; } = null!;
+
+    [CascadingParameter]
+    public ApplicationUser user { get; set; }
+
+    public UserCourses userCourses = new UserCourses();
+
+    public Course? course;
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await UserDataService.GetUserDataAsync();
+
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        courseId = uri.Segments.LastOrDefault();
+        if (courseId != null)
+            await GetCourseDetails(courseId);
+
+    }
+    public async Task GetCourseDetails(string courseId)
+    {
+        try
+        {
+            course = await CourseService.GetCourseByIdAsync(courseId);
+        }
+        catch (Exception)
+        {
+            StatusMessage = "Course not found";
+        }
+    }
+
+    public async Task HandleJoinCourse(EditContext editContext)
+    {
+        if(user != null && course != null)
+        {
+            var userCourse = new UserCourses
+                {
+                    UserId = user.Id,
+                    CourseId = course.Id
+                };
+        }
+       
+        //Fixa en UserCoursesEntity och spara ned dessa värden i databasen? (i en service)
+    }
+
+    public class UserCourses
+    {
+        public string? UserId { get; set; }
+        public string? CourseId { get; set; }
+    }
 }

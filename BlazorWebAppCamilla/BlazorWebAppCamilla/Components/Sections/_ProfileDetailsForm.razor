@@ -29,7 +29,6 @@
                 <div class="mb-3">
                     <InputText @bind-Value="DetailsForm.FirstName" class="form-control" />
                     <ValidationMessage For="() => DetailsForm.LastName" type="text" class="text-danger" />
-
                 </div>
             </div>
             <div class="last-name">
@@ -82,7 +81,7 @@
                 <div class="city">
                     <label class="form-label">City</label>
                     <div class="mb-3">
-                        <InputText @bind-Value="DetailsForm.City" type="text" class="form-control" id="City" placeholder="Enter your city" />
+                        <InputText @bind-Value="DetailsForm.City" type="text" class="form-control" id="city" placeholder="Enter your city" />
                         <ValidationMessage For="() =>DetailsForm.City" class="text-danger" />
                     </div>
                 </div>
@@ -100,6 +99,7 @@
 @code {
     [CascadingParameter]
     public ApplicationUser user { get; set; }
+
     [SupplyParameterFromQuery]
     public string statusMessage { get; set; } = "";
 

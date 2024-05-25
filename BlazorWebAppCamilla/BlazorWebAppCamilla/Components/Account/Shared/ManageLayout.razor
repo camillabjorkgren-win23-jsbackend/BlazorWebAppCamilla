@@ -40,41 +40,12 @@
     [CascadingParameter]
     public ApplicationUser user { get; set; }
 
-    private MultipartFormDataContent uploadModel = new MultipartFormDataContent();
-    private IBrowserFile? selectedFile;
-
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
 
-    private void HandleFileSelected(InputFileChangeEventArgs e)
-    {
-        selectedFile = e.File;
-    }
+   
 
 
-    public async Task HandleProfileImgUpload()
-    {
-        using var content = new MultipartFormDataContent();
-        var fileContent = new StreamContent(selectedFile.OpenReadStream(maxAllowedSize: 1024 * 1024 * 15));
-        fileContent.Headers.ContentType = new MediaTypeHeaderValue(selectedFile.ContentType);
-        content.Add(fileContent, "file", selectedFile!.Name);
-
-        try
-        {
-            var response = await Http.PostAsync("http://fileprovider-silicon-camilla.azurewebsites.net/api/upload", content);
-            if (response.IsSuccessStatusCode)
-            {
-                user = await UserManager.GetUserAsync(HttpContext.User) ?? null!;
-
-                StateHasChanged();
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-
-    }
     // protected override async Task OnInitializedAsync()
     // {
 

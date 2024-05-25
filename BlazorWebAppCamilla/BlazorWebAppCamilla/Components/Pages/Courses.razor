@@ -4,8 +4,7 @@
 @using Microsoft.AspNetCore.Authorization
 
 @attribute [StreamRendering]
-
-@* @attribute [Authorize] *@
+@attribute [Authorize]
 
 
 @* Gör om till en klient, det bör göras om man ska använda filtrering. *@
@@ -175,7 +174,7 @@
     {
         var query = new GraphQLQuery
             {
-                Query = "{getCourses {id imageUri isDigital isBestseller likes likesInProcent title authors{name} prices {price discount}}}"
+                Query = "{getCourses {id imageUri isDigital isBestseller likes hours likesInProcent title authors{name} prices {price discount}}}"
             };
 
         var response = await Http.PostAsJsonAsync("https://courseprovider-silicon-camilla.azurewebsites.net/api/graphql?code=LL18Cb5IbCut7M9hw0bCm5RFI7hOjOJwHOmU6-Dyd1TXAzFuSGQ4FA%3D%3D", query);
@@ -243,13 +242,11 @@
             }
             else
             {
-                // Logga ett felmeddelande om "getCourses" inte finns i svaret
                 Console.WriteLine("getCourses saknas i JSON-svaret.");
             }
         }
         else
         {
-            // Logga felmeddelande om HTTP-förfrågan misslyckas
             Console.WriteLine($"HTTP-förfrågan misslyckades med statuskod: {response.StatusCode}");
         }
     }

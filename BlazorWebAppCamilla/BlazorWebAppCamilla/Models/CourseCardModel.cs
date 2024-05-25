@@ -13,5 +13,5 @@ public class CourseCardModel
     public string? Hours { get; set; }
     public string? LikesInProcent { get; set; }
     public string? LikesInNumbers { get; set; }
-    public bool IsDigital { get; set; }
+    public bool? IsDigital { get; set; }
 }
