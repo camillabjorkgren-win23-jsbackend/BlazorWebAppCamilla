@@ -73,7 +73,7 @@ builder.Services.AddAuthorization(x =>
     x.AddPolicy("Users", policy => policy.RequireRole("SuperAdmin", "CIO", "Admin", "User"));
 });
 
-builder.Services.AddSingleton(s => new GraphQLHttpClient("http://localhost:7153/api/graphql", new SystemTextJsonSerializer()));
+builder.Services.AddSingleton(s => new GraphQLHttpClient("https://courseprovider-silicon-camilla.azurewebsites.net/api/graphql?code=LL18Cb5IbCut7M9hw0bCm5RFI7hOjOJwHOmU6-Dyd1TXAzFuSGQ4FA%3D%3D", new SystemTextJsonSerializer()));
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 var app = builder.Build();
