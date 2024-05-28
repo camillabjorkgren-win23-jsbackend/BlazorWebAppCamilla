@@ -1,6 +1,7 @@
 ﻿using BlazorWebAppCamilla.Models;
 using GraphQL;
 using GraphQL.Client.Http;
+using Newtonsoft.Json;
 
 namespace BlazorWebAppCamilla.Services;
 
@@ -67,15 +68,15 @@ public class CourseService(GraphQLHttpClient client)
         };
 
         var response = await _client.SendQueryAsync<UserCoursesQueryResponse>(request);
-        return response.Data.UserCourseIds;
+        return response.Data.GetUserCourseIds;
     }
 
-    public async Task<bool> RequestCreateUserCoursesAsync(UserCourses userCourses)
+    public async Task<UserCourses> RequestCreateUserCoursesAsync(UserCourses userCourses)
     {
         var request = new GraphQLRequest
         {
             Query = @"
-            mutation ($input: UserCoursesInput!) {
+            mutation ($input: CreateUserCourseInput!) {
                 saveUserCourse(input: $input) {
                     userId
                     courseId
@@ -85,14 +86,57 @@ public class CourseService(GraphQLHttpClient client)
             {
                 input = new
                 {
-                    UserId = userCourses.UserId,
-                    CourseId = userCourses.CourseId
+                    userId = userCourses.UserId,
+                    courseId = userCourses.CourseId
                 }
             }
         };
 
-        var response = await _client.SendMutationAsync<UserCoursesResponse>(request);
-        return response.Data.SaveUserCourse;
+        var response = await _client.SendMutationAsync<UserCourses>(request);
+        return response.Data;
+    }
+
+    public async Task<bool> RequestRemoveAllUserCourseAsync(string userId)
+    {
+        var request = new GraphQLRequest
+        {
+            Query = @"
+        mutation deleteAllUserCourses($userId: String!) {
+            deleteAllUserCourses(userId: $userId)
+        }",
+            Variables = new { userId }
+        };
+
+        var response = await _client.SendMutationAsync<DeleteUserCourseResponse>(request);
+        return response.Data.deleteAllUserCourses;
+    }
+
+    public async Task<bool> RequestRemoveUserCourseAsync(UserCourses userCourse)
+    {
+        var request = new GraphQLRequest
+        {
+            Query = @"
+            mutation deleteUserCourse($userCourse: UserCoursesInput!) {
+                deleteUserCourse(userCourse: $userCourse)
+            }",
+            Variables = new
+            {
+                userCourse = new
+                {
+                    UserId = userCourse.UserId,
+                    CourseId = userCourse.CourseId
+                }
+            }
+        };
+
+        var response = await _client.SendMutationAsync<DeleteUserCourseResponse>(request);
+        return response.Data.deleteUserCourse;
+    }
+
+    private class DeleteUserCourseResponse
+    {
+        public bool deleteUserCourse { get; set; }
+        public bool deleteAllUserCourses { get; set; } 
     }
 
     private class CourseResponse
@@ -100,13 +144,10 @@ public class CourseService(GraphQLHttpClient client)
         public Course GetCourseById { get; set; }
     }
 
-    public class UserCoursesQueryResponse
+    private class UserCoursesQueryResponse
     {
-        public IEnumerable<string> UserCourseIds { get; set; }
+        [JsonProperty("getUserCourseIds")]
+        public IEnumerable<string> GetUserCourseIds { get; set; }
     }
 
-    public class UserCoursesResponse
-    {
-        public bool SaveUserCourse { get; set; }
-    }
 }

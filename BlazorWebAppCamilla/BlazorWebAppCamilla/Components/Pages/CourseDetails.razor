@@ -6,6 +6,7 @@
 
 @inject CourseService CourseService
 @inject UserDataService UserDataService
+
 @if (course == null)
 {
     <p>Loading...</p>
@@ -17,70 +18,46 @@ else
             <img src="@course.ImageUri" alt="">
         </div>
         <div class="container">
-            @if (!string.IsNullOrWhiteSpace(StatusMessage))
+            @if (!string.IsNullOrWhiteSpace(statusMessage))
             {
-                <p>@StatusMessage</p>
+                <p>@statusMessage</p>
             }
             <div class="text-header">
-
                 <div class="bread-crumbs">
-                    <a href="/"><i class="fa-light fa-house"></i>Home</a><i class="fa-solid fa-angles-right"></i><a href="/courses">Courses</a><i class="fa-solid fa-angles-right"></i><a href="/course/details/@course.Id">@course.Title</a>
+                    <a href="/"><i class="fa-light fa-house"></i>Home</a>
+                    <i class="fa-solid fa-angles-right"></i>
+                    <a href="/courses">Courses</a>
+                    <i class="fa-solid fa-angles-right"></i>
+                    <a href="/course/details/@course.Id">@course.Title</a>
                 </div>
                 <div class="title-description">
                     <div class="labels">
                         @if (course.IsBestseller)
                         {
-                            <div class="bestseller">
-                                Best Seller
-                            </div>
+                            <div class="bestseller">Best Seller</div>
                         }
                         @if (course.IsDigital)
                         {
-                            <div class="digital">
-                                Digital
-                            </div>
+                            <div class="digital">Digital</div>
                         }
                     </div>
                     <h1 class="title">@course.Title</h1>
                     <p class="text">@course.Ingress</p>
                     <div class="info">
                         <div class="stars">
-                            @if (course.StarRating == 1)
+                            @for (var i = 0; i < course.StarRating; i++)
                             {
-                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
-                            }
-                            else if (course.StarRating == 2)
-                            {
-                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
-                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
-                            }
-                            else if (course.StarRating == 3)
-                            {
-                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
-                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
-                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
-                            }
-                            else if (course.StarRating == 4)
-                            {
-                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
-                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
-                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
-                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
-                            }
-                            else if (course.StarRating == 5)
-                            {
-                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
-                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
-                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
-                                <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
                                 <i class="fa-solid fa-star" style="color: #FFBA08;"></i>
                             }
                         </div>
-
                         <div class="thumbs">
-                            <i class="fa-light fa-thumbs-up" style="color: #B4B7C9;"></i> <span>@course.Likes Likes</span>
+                            <i class="fa-light fa-thumbs-up" style="color: #B4B7C9;"></i>
+                            <span>@course.Likes Likes</span>
                         </div>
-                        <div class="hours"><i class="fa-regular fa-clock" style="color: #B4B7C9;"></i> <span>@course.Hours hours</span></div>
+                        <div class="hours">
+                            <i class="fa-regular fa-clock" style="color: #B4B7C9;"></i>
+                            <span>@course.Hours hours</span>
+                        </div>
                     </div>
                     <div class="creator">
                         @foreach (var author in course.Authors)
@@ -89,11 +66,8 @@ else
                             <div class="created">Created by</div>
                             <div class="creator-name">@author.Name</div>
                         }
-
-
                     </div>
                 </div>
-
             </div>
             <div class="content">
                 <div class="description">
@@ -102,22 +76,15 @@ else
                         @course.Content.Description
                     </div>
                 </div>
-
-
                 <div class="aside-info">
-
                     <h4>This course includes:</h4>
                     @foreach (var include in course.Content.Includes)
                     {
-                        <div class="info"><i class="fa-regular fa-display"></i><p>@include</p></div>
+                        <div class="info">
+                            <i class="fa-regular fa-display"></i>
+                            <p>@include</p>
+                        </div>
                     }
-                    @* <i class="fa-regular fa-display"></i><p>148 hours on-demand video</p></div>
-                <div class="info"><i class="fa-light fa-newspaper"></i>18 articles</div>
-                <div class="info"><i class="fa-regular fa-download"></i>25 downloadable resources</div>
-                <div class="info"><i class="fa-regular fa-infinity"></i>Full lifetime access</div>
-                <div class="info"><i class="fa-light fa-file-certificate"></i> Certificate of completion</div> *@
-
-
                     <div class="prices">
                         @if (course.Prices.Discount > 0)
                         {
@@ -129,16 +96,14 @@ else
                             <h2 class="current-price">@course.Prices.Currency @course.Prices.Price</h2>
                         }
                     </div>
-
-
                     <EditForm FormName="JoinCourse" Model="userCourses" OnValidSubmit="HandleJoinCourse" novalidate>
                         <InputText type="hidden" name="userId" @bind-Value="@user.Id" />
                         <InputText type="hidden" name="courseId" @bind-Value="@course.Id" />
                         <button class="btn btn-theme-s" type="submit">Join course</button>
                     </EditForm>
                 </div>
-
-                @* @if (User.IsInRole("CIO") && user != null)
+                @* Uncomment if you need Admin panel
+            @* @if (User.IsInRole("CIO") && user != null)
             {
             <div class="aside-info-admin">
             <h5>Admin panel</h5>
@@ -146,12 +111,12 @@ else
             <i class="fa-sharp fa-solid fa-id-badge"></i>
             <h5>@user.FirstName @user.LastName</h5>
             </div>
-
             <div class="buttons">
-            <a asp-action="UpdateCourse" asp-controller="admin" asp-route-id="@Model.Id"><button class="btn btn-gray" type="button">Update Course</button></a>
-            <a asp-action="DeleteCourse" asp-controller="admin" asp-route-id="@Model.Id"><button class="btn btn-red" type="submit">Delete Course</button></a>
+            <a asp-action="UpdateCourse" asp-controller="admin" asp-route-id="@Model.Id">
+            <button class="btn btn-gray" type="button">Update Course</button></a>
+            <a asp-action="DeleteCourse" asp-controller="admin" asp-route-id="@Model.Id">
+            <button class="btn btn-red" type="submit">Delete Course</button></a>
             </div>
-
             </div>
             } *@
                 <div class="details">
@@ -159,7 +124,9 @@ else
                     @foreach (var detail in course.Content.ProgramDetails)
                     {
                         <div class="detail">
-                            <div class="number"><h2>@detail.Id</h2></div>
+                            <div class="number">
+                                <h2>@detail.Id</h2>
+                            </div>
                             <div class="divider"></div>
                             <h3 class="detail-title">@detail.Title</h3>
                             <p class="text">@detail.Description</p>
@@ -167,7 +134,6 @@ else
                     }
                 </div>
             </div>
-
             <div class="creator-info">
                 <img id="pattern" src="/images/Courses/pattern.svg" alt="">
                 <div class="creator-img">
@@ -176,39 +142,42 @@ else
                         <img src="@author.AuthorImage" alt="@author.Name">
                     }
                 </div>
-
                 <div class="creator-text">
                     <p>Learn from the best</p>
                     @foreach (var author in course.Authors)
                     {
                         <h2>@author.Name</h2>
-                    })
-
+                    }
                     <p>@course.Reviews</p>
                     <div class="buttons">
-                        <button class="btn-red"><i class="fa-brands fa-youtube" style="color: #ffffff;"></i> 240k subscribers</button>
-                        <button class="btn-theme"><i class="fa-brands fa-facebook" style="color: #ffffff;"></i> 180k followers</button>
+                        <button class="btn-red">
+                            <i class="fa-brands fa-youtube" style="color: #ffffff;"></i>
+                            240k subscribers
+                        </button>
+                        <button class="btn-theme">
+                            <i class="fa-brands fa-facebook" style="color: #ffffff;"></i>
+                            180k followers
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
     <div>@user.Email</div>
 }
-
 
 @code {
     [Parameter]
     public string? courseId { get; set; }
 
     [SupplyParameterFromQuery]
-    public string StatusMessage { get; set; } = null!;
+    private string statusMessage { get; set; } = null!;
 
     [CascadingParameter]
     public ApplicationUser user { get; set; }
 
     public UserCourses userCourses = new UserCourses();
+
 
     public Course? course;
 
@@ -220,8 +189,8 @@ else
         courseId = uri.Segments.LastOrDefault();
         if (courseId != null)
             await GetCourseDetails(courseId);
-
     }
+
     public async Task GetCourseDetails(string courseId)
     {
         try
@@ -230,27 +199,24 @@ else
         }
         catch (Exception)
         {
-            StatusMessage = "Course not found";
+            statusMessage = "Course not found";
         }
     }
 
     public async Task HandleJoinCourse(EditContext editContext)
     {
-        if(user != null && course != null)
+        if (user != null && course != null)
         {
             var userCourse = new UserCourses
                 {
                     UserId = user.Id,
                     CourseId = course.Id
                 };
+            var result = await CourseService.RequestCreateUserCoursesAsync(userCourse);
+            if (result != null)
+            {
+                statusMessage = "Course added to your courses";
+            }
         }
-       
-        //Fixa en UserCoursesEntity och spara ned dessa värden i databasen? (i en service)
-    }
-
-    public class UserCourses
-    {
-        public string? UserId { get; set; }
-        public string? CourseId { get; set; }
     }
 }
