@@ -102,23 +102,7 @@ else
                         <button class="btn btn-theme-s" type="submit">Join course</button>
                     </EditForm>
                 </div>
-                @* Uncomment if you need Admin panel
-            @* @if (User.IsInRole("CIO") && user != null)
-            {
-            <div class="aside-info-admin">
-            <h5>Admin panel</h5>
-            <div class="admin-badge">
-            <i class="fa-sharp fa-solid fa-id-badge"></i>
-            <h5>@user.FirstName @user.LastName</h5>
-            </div>
-            <div class="buttons">
-            <a asp-action="UpdateCourse" asp-controller="admin" asp-route-id="@Model.Id">
-            <button class="btn btn-gray" type="button">Update Course</button></a>
-            <a asp-action="DeleteCourse" asp-controller="admin" asp-route-id="@Model.Id">
-            <button class="btn btn-red" type="submit">Delete Course</button></a>
-            </div>
-            </div>
-            } *@
+
                 <div class="details">
                     <h2>Program Details</h2>
                     @foreach (var detail in course.Content.ProgramDetails)

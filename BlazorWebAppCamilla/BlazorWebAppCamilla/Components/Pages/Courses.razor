@@ -2,15 +2,22 @@
 @using BlazorWebAppCamilla.Components.GraphQL
 @using BlazorWebAppCamilla.Models
 @using Microsoft.AspNetCore.Authorization
+@using System.Text.Json
 
+@rendermode InteractiveServer
 @attribute [StreamRendering]
 @attribute [Authorize]
 
+@inject UserDataService UserDataService
+@inject CourseService CourseService
 
-@* Gör om till en klient, det bör göras om man ska använda filtrering. *@
 
 <section class="courses">
     <div class="container">
+        @if (!string.IsNullOrEmpty(statusMessage))
+        {
+            <p>@statusMessage</p>
+        }
         <div class="bread-crumbs">
             <NavLink href="/"><i class="fa-light fa-house"></i>Home</NavLink><i class="fa-solid fa-angles-right"></i><NavLink href="/courses">Courses</NavLink>
         </div>
@@ -18,23 +25,6 @@
         <div class="upper-content">
             <h1 class="title">Courses</h1>
 
-            @*  <div class="search-categories">
-            <div class="select">
-            <i class="fa-light fa-arrow-down"></i>
-            <div class="selected">
-            All categories
-            </div>
-            <div class="select-options d-none">
-            <div class="option" data-value="all">All Categories</div>
-            @if (courses.Categories != null)
-            {
-            foreach (var category in Model.Categories)
-            {
-            <div class="option" data-value="@category.CategoryName">@category.CategoryName</div>
-            }
-            }
-            </div>
-            </div> *@
             <div class="input-search-group">
                 <input id="searchQuery" name="searchQuery" class="input-group-text" placeholder="Search courses" />
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -52,45 +42,49 @@
 
                 @foreach (var course in courses)
                 {
+                    var removeCourseModel = new UserCourses { UserId = user.Id, CourseId = course.Id };
+                    var joinCourseModel = new UserCourses { UserId = user.Id, CourseId = course.Id };
 
+                    bool isBookmarked = false;
                     var link = $"courses/details/{course.Id}";
                     <div class="course">
                         @if (course.IsBestseller)
                         {
                             <div class="best-seller">Best Seller</div>
 
-                        }@* @{
-                bool isBookmarked = false;
-                if (course. != null)
-                {
-                foreach (var courseId in Model.CoursesId)
-                {
-                if (courseId!.Id == course.Id)
-                {
-                isBookmarked = true;
-                }
-                };
-                }
-                } *@
+                        }
 
+                        @if (userCourse != null)
+                        {
+                            foreach (var courseId in userCourse)
+                            {
+                                if (course.Id == courseId.CourseId)
+                                {
+                                    isBookmarked = true;
+                                }
+                            };
+                        }
 
-                        @*       @if (isBookmarked)
-                {
-                <form asp-action="RemoveCourse" asp-controller="Account" asp-route-ReturnUrl="@ViewData["ReturnUrl"]" method="post">
-                <input type="hidden" name="userId" value="@user!.Id" />
-                <input type="hidden" name="courseId" value="@course.Id" />
-                <button type="submit" class="saved-item" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove"><i class="fa-solid fa-bookmark"></i></button>
-                </form>
-                <a asp-action="RemoveCourse" asp-controller="Account" asp-route-id="@course.Id" asp-route-ReturnUrl="@ViewData["ReturnUrl"]"><button class="saved-item" data-course-id="@course.Id" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove"><i class="fa-solid fa-bookmark filled"></i></button></a>
-                }
-                else
-                {
-                <form asp-action="JoinCourse" asp-controller="Account" method="post">
-                <input type="hidden" name="userId" value="@user!.Id" />
-                <input type="hidden" name="courseId" value="@course.Id" />
-                <button type="submit" class="saved-item" data-course-id="@course.Id" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Join Course"><i class="fa-light fa-bookmark"></i></button>
-                </form>
-                } *@
+                        @if (isBookmarked)
+                        {
+                            <EditForm Model="removeCourseModel" FormName="removecourse" OnValidSubmit="@(() => RemoveUserCourse(removeCourseModel))" novalidate>
+                                <InputText type="hidden" @bind-Value="@user.Id" />
+                                <InputText type="hidden" @bind-Value="@course.Id" />
+                                <button type="submit" class="saved-item" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove">
+                                    <i class="fa-solid fa-bookmark"></i>
+                                </button>
+                            </EditForm>
+                        }
+                        else
+                        {
+                            <EditForm Model="joinCourseModel" FormName="joincourse" OnValidSubmit="@(() => JoinUserCourse(joinCourseModel))" novalidate>
+                                <InputText type="hidden" @bind-Value="@user.Id" />
+                                <InputText type="hidden" @bind-Value="@course.Id" />
+                                <button type="submit" class="saved-item" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Remove">
+                                    <i class="fa-light fa-bookmark"></i>
+                                </button>
+                            </EditForm>
+                        }
 
 
 
@@ -129,27 +123,10 @@
             </div>
         }
 
+
     </div>
 </section>
 
-@*      @if (Model.Pagination != null && Model.Pagination.TotalPages > 1)
-        {
-        <nav>
-        <div class="pagination">
-        @for (int i = 1; i <= Model.Pagination.TotalPages; i++)
-        {
-        if (i == Model.Pagination.CurrentPage)
-        {
-        <span class="number active page-item">@i</span>
-        }
-        else
-        {
-        <a class="number page-item" href="@Url.Action("Courses", new {pageNumber = i, pageSize = Model.Pagination.PageSize})">@i</a>
-        }
-        }
-        </div>
-        </nav>
-        } *@
 
 
 <aside class="work-with-us">
@@ -165,91 +142,150 @@
     </div>
 </aside>
 
-@* <script defer src="../wwwroot/js/FilterCourse.js"></script> *@
+
 
 @code {
+    private string statusMessage = string.Empty;
     private List<CourseCardModel>? courses;
 
-    protected override async Task OnInitializedAsync()
+    public List<UserCourses> userCourse = new List<UserCourses>();
+
+    [CascadingParameter]
+    public ApplicationUser user { get; set; } = new ApplicationUser();
+
+    public async Task RemoveUserCourse(UserCourses removeUserCourse)
     {
-        var query = new GraphQLQuery
-            {
-                Query = "{getCourses {id imageUri isDigital isBestseller likes hours likesInProcent title authors{name} prices {price discount}}}"
-            };
-
-        var response = await Http.PostAsJsonAsync("https://courseprovider-silicon-camilla.azurewebsites.net/api/graphql?code=LL18Cb5IbCut7M9hw0bCm5RFI7hOjOJwHOmU6-Dyd1TXAzFuSGQ4FA%3D%3D", query);
-
-        if (response.IsSuccessStatusCode)
+        var response = await CourseService.RequestRemoveUserCourseAsync(removeUserCourse);
+        if (response)
         {
-            var result = await response.Content.ReadFromJsonAsync<DynamicGraphQLResponse>();
-
-            if (result?.Data.TryGetProperty("getCourses", out var coursesElement) == true)
-            {
-                courses = coursesElement.EnumerateArray().Select(course =>
-                {
-                    var courseModel = new CourseCardModel();
-
-                    if (course.TryGetProperty("id", out var idElement))
-                    {
-                        courseModel.Id = idElement.GetString();
-                    }
-                    if (course.TryGetProperty("title", out var titleElement))
-                    {
-                        courseModel.Title = titleElement.GetString();
-                    }
-                    if (course.TryGetProperty("isBestseller", out var isBestsellerElement))
-                    {
-                        courseModel.IsBestseller = isBestsellerElement.GetBoolean();
-                    }
-                    if (course.TryGetProperty("isDigital", out var isDigitalElement))
-                    {
-                        courseModel.IsDigital = isDigitalElement.GetBoolean();
-                    }
-                    if (course.TryGetProperty("likesInProcent", out var likesInProcentElement))
-                    {
-                        courseModel.LikesInProcent = likesInProcentElement.GetString();
-                    }
-                    if (course.TryGetProperty("likes", out var likesElement))
-                    {
-                        courseModel.LikesInNumbers = likesElement.GetString();
-                    }
-                    if (course.TryGetProperty("hours", out var hoursElement))
-                    {
-                        courseModel.Hours = hoursElement.GetString();
-                    }
-                    if (course.TryGetProperty("authors", out var authorsElement) && authorsElement.GetArrayLength() > 0)
-                    {
-                        courseModel.Author = authorsElement[0].GetProperty("name").GetString();
-                    }
-                    if (course.TryGetProperty("prices", out var pricesElement))
-                    {
-                        if (pricesElement.TryGetProperty("price", out var priceElement))
-                        {
-                            courseModel.Price = priceElement.GetDecimal();
-                        }
-                        if (pricesElement.TryGetProperty("discount", out var discountElement))
-                        {
-                            courseModel.DiscountPrice = discountElement.GetDecimal();
-                        }
-                    }
-                    if (course.TryGetProperty("imageUri", out var imageUriElement))
-                    {
-                        courseModel.ImageUri = imageUriElement.GetString();
-                    }
-
-                    return courseModel;
-                }).ToList();
-            }
-            else
-            {
-                Console.WriteLine("getCourses saknas i JSON-svaret.");
-            }
+            statusMessage = "Course removed";
+            StateHasChanged();
         }
         else
         {
-            Console.WriteLine($"HTTP-förfrågan misslyckades med statuskod: {response.StatusCode}");
+            statusMessage = "Failed to remove course";
         }
     }
+
+    public async Task JoinUserCourse(UserCourses addUserCourse)
+    {
+        var response = await CourseService.RequestCreateUserCoursesAsync(addUserCourse);
+        if (response != null)
+        {
+            statusMessage = "Course added to your courses";
+            StateHasChanged();
+        }
+        else
+        {
+            statusMessage = "Failed to add course";
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            user = await UserDataService.GetUserDataAsync();
+            if (user != null)
+            {
+                var userCourseIdsResponse = await CourseService.GetUserCourseIdsAsync(user.Id);
+                if (userCourseIdsResponse != null)
+                {
+                    foreach (var courseId in userCourseIdsResponse)
+                    {
+                        userCourse.Add(new UserCourses { UserId = user.Id, CourseId = courseId });
+                    };
+
+                    var query = new GraphQLQuery
+                        {
+                            Query = "{getCourses {id imageUri isDigital isBestseller likes hours likesInProcent isBookmarked title authors{name} prices {price discount}}}"
+                        };
+
+                    var response = await Http.PostAsJsonAsync("http://localhost:7153/api/graphql", query);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var result = await response.Content.ReadFromJsonAsync<DynamicGraphQLResponse>();
+
+                        if (result?.Data.TryGetProperty("getCourses", out var coursesElement) == true)
+                        {
+                            courses = coursesElement.EnumerateArray().Select(course =>
+                            {
+                                var courseModel = new CourseCardModel();
+
+                                if (course.TryGetProperty("id", out var idElement))
+                                {
+                                    courseModel.Id = idElement.GetString();
+                                }
+                                if (course.TryGetProperty("title", out var titleElement))
+                                {
+                                    courseModel.Title = titleElement.GetString();
+                                }
+                                if (course.TryGetProperty("isBestseller", out var isBestsellerElement))
+                                {
+                                    courseModel.IsBestseller = isBestsellerElement.GetBoolean();
+                                }
+                            if (course.TryGetProperty("isBookmarked", out var isBookmarkedElement))
+                            {
+                                courseModel.IsBookmarked = isBookmarkedElement.ValueKind != JsonValueKind.Null ? isBookmarkedElement.GetBoolean() : (bool?)null;
+                            }
+                                if (course.TryGetProperty("isDigital", out var isDigitalElement))
+                                {
+                                    courseModel.IsDigital = isDigitalElement.GetBoolean();
+                                }
+                                if (course.TryGetProperty("likesInProcent", out var likesInProcentElement))
+                                {
+                                    courseModel.LikesInProcent = likesInProcentElement.GetString();
+                                }
+                                if (course.TryGetProperty("likes", out var likesElement))
+                                {
+                                    courseModel.LikesInNumbers = likesElement.GetString();
+                                }
+                                if (course.TryGetProperty("hours", out var hoursElement))
+                                {
+                                    courseModel.Hours = hoursElement.GetString();
+                                }
+                                if (course.TryGetProperty("authors", out var authorsElement) && authorsElement.GetArrayLength() > 0)
+                                {
+                                    courseModel.Author = authorsElement[0].GetProperty("name").GetString();
+                                }
+                                if (course.TryGetProperty("prices", out var pricesElement))
+                                {
+                                    if (pricesElement.TryGetProperty("price", out var priceElement))
+                                    {
+                                        courseModel.Price = priceElement.GetDecimal();
+                                    }
+                                    if (pricesElement.TryGetProperty("discount", out var discountElement))
+                                    {
+                                        courseModel.DiscountPrice = discountElement.GetDecimal();
+                                    }
+                                }
+                                if (course.TryGetProperty("imageUri", out var imageUriElement))
+                                {
+                                    courseModel.ImageUri = imageUriElement.GetString();
+                                }
+
+                                return courseModel;
+                            }).ToList();
+                        }
+                        else
+                        {
+                            Console.WriteLine("getCourses saknas i JSON-svaret.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"HTTP-förfrågan misslyckades med statuskod: {response.StatusCode}");
+                    }
+
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ett fel inträffade: {ex.Message}");
+        }
+    }
+
 }
 
-            // https://youtu.be/K9JXYil6LMI?t=7498 
+            

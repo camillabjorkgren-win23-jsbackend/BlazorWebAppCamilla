@@ -9,6 +9,7 @@ public class CourseCardModel
     public string? Author { get; set; }
     public decimal? Price { get; set; }
     public decimal? DiscountPrice { get; set; }
+    public bool? IsBookmarked { get; set; }
 
     public string? Hours { get; set; }
     public string? LikesInProcent { get; set; }
