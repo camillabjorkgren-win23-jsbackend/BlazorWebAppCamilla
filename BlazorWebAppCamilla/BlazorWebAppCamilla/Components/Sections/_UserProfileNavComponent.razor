@@ -36,7 +36,15 @@ else
             <NavLink href="/profile/notifications"><button class="button btn"><i class="fa-sharp fa-light fa-bell"></i> Notifications</button></NavLink>
             <NavLink href="/profile/messages"><button class="button btn"><i class="fa-light fa-messages"></i> Messages</button></NavLink>
             <NavLink href="/profile/saveditems"><button class="button btn"><i class="fa-light fa-bookmark i"></i> Saved Items</button></NavLink>
-            <button @onclick="Logout" class="signout"><i class="fa-light fa-right-from-bracket i"></i> Sign Out</button>
+            <form action="Account/Logout" method="post">
+                <AntiforgeryToken />
+                <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                <button type="submit" class="signout button btn">
+                    <i class="fa-light fa-right-from-bracket i"></i>
+                    Sign Out
+                </button>
+            </form>
+            @* <button @onclick="Logout" class="signout"><i class="fa-light fa-right-from-bracket i"></i> Sign Out</button> *@
 
         </div>
     </div>
@@ -44,7 +52,7 @@ else
 
 
 @code {
-
+    private string? currentUrl;
     [Parameter]
     public ApplicationUser User { get; set; }
 
@@ -77,7 +85,7 @@ else
                 {
                     var filePath = await response.Content.ReadAsStringAsync();
                     if (filePath != null)
-                        await UpdateUserProfileImagePath(filePath);
+                        await UpdateUserProfileImagePath(filePath, User.Id);
 
                     StateHasChanged();
                 }
@@ -90,21 +98,25 @@ else
     }
 
 
-    private async Task Logout()
-    {
-        await SignInManager.SignOutAsync();
-        NavigationManager.NavigateTo("/");
-    }
 
-    private async Task<bool> UpdateUserProfileImagePath(string filePath)
+    private async Task<bool> UpdateUserProfileImagePath(string filePath, string userId)
     {
-        User.UserProfile!.ProfileImg = filePath;
-        var response = await Http.PutAsJsonAsync("http://localhost:7262/api/UserProfile/UpdateProfileImage", User.UserProfile);
+        UserProfileModel userProfileModel = new UserProfileModel
+            {
+                ProfileImg = filePath,
+                UserId = userId
+            };
+        var response = await Http.PostAsJsonAsync("http://localhost:7074/api/UpdateProfileImage", userProfileModel);
         if (response.IsSuccessStatusCode)
         {
             return true;
         }
         return false;
+    }
+    public class UserProfileModel
+    {
+        public string UserId { get; set; }
+        public string ProfileImg { get; set; }
     }
 }
     

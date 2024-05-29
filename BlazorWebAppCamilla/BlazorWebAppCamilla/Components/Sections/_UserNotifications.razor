@@ -16,7 +16,7 @@
 <div class="content">
     <div class="password-form">
         <h2 class="title">Notifications</h2>
-        
+
 
         @if (!string.IsNullOrEmpty(@statusMessage))
         {
@@ -24,7 +24,7 @@
                 @statusMessage
             </div>
         }
-        <EditForm class="form" method="post" Model="Notifications" FormName="PreferredNotifications" OnValidSubmit="SubmitNotifications" novalidate>
+        <EditForm class="form" method="post" Model="Notifications" FormName="PreferredNotifications" OnValidSubmit="@(() => SubmitNotifications(Notifications))" novalidate>
             <DataAnnotationsValidator />
             <div class="current-password">
                 <label class="form-label">Preferred email for notifications</label>
@@ -49,7 +49,11 @@
                 </label>
                 <label>Use Dark Mode Theme in Application</label>
             </div>
-
+            @if(user != null)
+            {
+                <InputText type="hidden" @bind-Value="@user.Id" />
+            }
+           
 
             <div class="buttons">
                 <button type="reset" class="button btn-gray">Cancel</button>
@@ -68,6 +72,9 @@
 
     public NotificationsFormModel Notifications { get; set; } = new();
 
+    [CascadingParameter]
+    public ApplicationUser user { get; set; }
+
     public class NotificationsFormModel
     {
         [Required(ErrorMessage = "An valid email address is required")]
@@ -76,19 +83,23 @@
         public string Email { get; set; } = null!;
 
         [Display(Name = "Subscribe to newsletter", Order = 1)]
-        public bool SubscribeNewsletter { get; set; } = false;
+        public bool SubscribeNewsletter { get; set; } 
 
 
         [Display(Name = "Use Dark Mode Theme in Application", Order = 2)]
-        public bool DarkMode { get; set; } = false;
+        public bool DarkMode { get; set; }
+
+        public string UserId { get; set; } = null!;
     }
 
     protected override async Task OnInitializedAsync()
     {
+        user = await UserDataService.GetUserDataAsync();
+
         isDarkMode = await ThemeService.GetThemeAsync();
 
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = await UserManager.GetUserAsync(authState.User);
+        // var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        // var user = await UserManager.GetUserAsync(authState.User);
 
         if (user != null && user.PreferredEmail != null)
         {
@@ -100,23 +111,27 @@
 
 
 
-    private async Task SubmitNotifications()
+    private async Task SubmitNotifications(NotificationsFormModel notifications)
     {
-        ApplicationUser user = await UserDataService.GetUserDataAsync();
-        if (user != null)
+        try
         {
-            user.PreferredEmail = Notifications.Email;
-            user.SubscribeNewsletter = Notifications.SubscribeNewsletter;
-            user.DarkMode = Notifications.DarkMode;
+            var notificationFormModel = new NotificationsFormModel
+                {
+                    Email = notifications.Email,
+                    SubscribeNewsletter = notifications.SubscribeNewsletter,
+                    DarkMode = notifications.DarkMode,
+                    UserId = user.Id
+                };
 
-            var result = await UserManager.UpdateAsync(user);
-            if (result.Succeeded)
+            var response = await Http.PostAsJsonAsync("http://localhost:7074/api/UpdateUserNotifications", notificationFormModel);
+            if (response.IsSuccessStatusCode)
             {
+                var user = await response.Content.ReadFromJsonAsync<ApplicationUser>();
+
                 var theme = user.DarkMode ? "dark" : "light";
                 await JS.InvokeVoidAsync("updateTheme", theme);
 
                 StateHasChanged();
-
 
                 statusMessage = "Account notifications updated successfully.";
                 return;
@@ -127,29 +142,13 @@
                 return;
             }
         }
+        catch (Exception ex)
+        {
+            statusMessage = "An error occured while updating the account notifications.";
+            return;
+        }
     }
-
-    // protected override async Task OnAfterRenderAsync(bool firstRender)
-    // {
-    //     ApplicationUser user = await UserDataService.GetUserDataAsync();
-    //     var theme = user.DarkMode ? "dark" : "light";
-    //     if (!firstRender)
-    //     {
-    //         await JS.InvokeVoidAsync("updateTheme", theme);
-    //     }
-    // }
-    // private async Task ToggleTheme(string mode)
-    // {
-    //     var response = await HttpClient.GetAsync($"/sitesettings/changetheme?mode={mode}");
-    //     if (response.IsSuccessStatusCode)
-    //     {
-    //         // Tema ändrat på servern, uppdatera klientens temaläge
-    //         isDarkMode = mode == "dark"; // Uppdatera en lokal variabel för temaläge
-    //         await IJSRuntime.("updateTheme", mode); // Kör JavaScript-funktion för att uppdatera temat i SCSS
-    //     }
-    //     else
-    //     {
-    //         Console.WriteLine("Failed to change theme.");
-    //     }
-    // }
 }
+
+
+
