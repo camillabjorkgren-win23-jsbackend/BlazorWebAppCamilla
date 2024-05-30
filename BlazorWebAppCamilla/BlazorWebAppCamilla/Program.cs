@@ -1,6 +1,7 @@
 using BlazorWebAppCamilla.Components;
 using BlazorWebAppCamilla.Components.Account;
 using BlazorWebAppCamilla.Data;
+using BlazorWebAppCamilla.Hubs;
 using BlazorWebAppCamilla.Services;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
@@ -75,6 +76,8 @@ builder.Services.AddAuthorization(x =>
 
 builder.Services.AddSingleton(s => new GraphQLHttpClient("https://courseprovider-silicon-camilla.azurewebsites.net/api/graphql?code=LL18Cb5IbCut7M9hw0bCm5RFI7hOjOJwHOmU6-Dyd1TXAzFuSGQ4FA%3D%3D", new SystemTextJsonSerializer()));
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddSignalR();
+
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
@@ -110,5 +113,6 @@ using (var scope = app.Services.CreateScope())
         }
     }
 }
+
 
 app.Run();

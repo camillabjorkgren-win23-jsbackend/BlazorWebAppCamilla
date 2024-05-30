@@ -1,0 +1,126 @@
+﻿@page "/chat"
+@rendermode InteractiveAuto
+
+@using Microsoft.AspNetCore.SignalR.Client
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+
+
+
+<PageTitle>Blazor Chat</PageTitle>
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-header">Blazor SignalR Chat with Administrator</div>
+            <div class="card-body">
+
+                <ul class="list-group">
+                    @foreach (var message in messages)
+                    {
+                        <li class="list-group-item mb-3 @(message.UserName == userName ? "chat-bubble-right" : "chat-bubble-left")">
+                            <div>
+                                <strong>@message.UserName </strong><span> @message.Created.ToString("HH:mm")</span>
+                            </div>
+                            <div>@message.Message</div>
+                        </li>
+                    }
+                </ul>
+
+                <div class="mt-3" style="height: 20px;">
+                    @if (!string.IsNullOrEmpty(typingUser))
+                    {
+                        <div>@typingUser is typing<span class="typing-indicator">...</span></div>
+                    }
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="mt-2">
+                    <textarea class="form-control" @bind="currentMessage" @oninput="NotifyTyping" placeholder="Message"></textarea>
+                </div>
+                <div class="col-2 my-3">
+                    <button class="btn btn-success w-100" @onclick="Send">Send Message</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private HubConnection? connection;
+    private bool isConnected => connection?.State == HubConnectionState.Connected;
+    private string? userName;
+    private string? typingUser;
+    private System.Timers.Timer? typingTimer;
+
+    private List<ChatMessage> messages = new();
+    private string? currentMessage;
+
+
+    public class ChatMessage
+    {
+        public string? Message { get; set; }
+        public string? UserName { get; set; }
+        public DateTime Created { get; set; }
+    }
+
+    private async Task NotifyTyping() => await connection!.SendAsync("Typing", userName);
+
+    private async Task Send()
+    {
+        var newMessage = new ChatMessage { UserName = userName, Message = currentMessage, Created = DateTime.Now };
+        await connection!.SendAsync("SendMessageToAll", newMessage.UserName, newMessage.Message, newMessage.Created);
+
+        currentMessage = string.Empty;
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated ?? false)
+        {
+            userName = user.Identity.Name;
+        }
+        else
+        {
+            userName = "Anonymous";
+        }
+
+        connection = new HubConnectionBuilder().WithUrl("https://chatprovider-silicon-camilla.azurewebsites.net/chathub?key=JDJ5JDEwJEc0dUtoT1FlYWRPaEF4RmtCRjE4Z2VlbFRid1Jjb3F3ODVLZDdSUkZCQjFmVWdld0g4Lnd1").Build();
+
+        connection.On<string, string, DateTime>("ReceiveMessage", (fromUser, message, dateTime) =>
+         {
+             var newMessage = new ChatMessage { UserName = fromUser, Message = message, Created = dateTime };
+             messages.Add(newMessage);
+             InvokeAsync(StateHasChanged);
+         });
+
+        connection.On<string>("UserTyping", (typingUserName) =>
+        {
+            typingUser = typingUserName;
+            InvokeAsync(StateHasChanged);
+            typingTimer?.Stop();
+            typingTimer = new System.Timers.Timer(2000);
+            typingTimer.Elapsed += (s, e) =>
+            {
+                typingUser = null;
+                InvokeAsync(StateHasChanged);
+            };
+
+            typingTimer.Start();
+        });
+
+
+
+        await connection.StartAsync();
+       
+       
+    }
+}

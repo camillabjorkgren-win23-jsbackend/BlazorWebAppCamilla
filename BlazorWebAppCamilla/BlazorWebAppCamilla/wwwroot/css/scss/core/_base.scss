@@ -206,3 +206,21 @@ img {
         margin-right: 2rem;
     }
 }
+
+.chat-bubble-right {
+    text-align: right;
+    background-color: #d1ffd6;
+    margin-left: auto;
+    border-radius: 15px;
+    padding: 10px;
+    max-width: 75%;
+}
+
+.chat-bubble-left {
+    text-align: left;
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 10px;
+    max-width: 75%;
+    margin-right: auto;
+}
