@@ -115,7 +115,7 @@
                     UserId = user.Id
                 };
 
-            var response = await Http.PostAsJsonAsync("https://userprovider-silicon-camilla.azurewebsites.net/api/UpdateProfileImage?code=RO2LPVK8k1ZtaoGautW_cbJ4IqUr3LLi5JZk7dM4p7tTAzFuuFu2Vg%3D%3D", notificationFormModel);
+            var response = await Http.PostAsJsonAsync("https://userprovider-silicon-camilla.azurewebsites.net/api/UpdateUserNotifications?code=-JYhCwgslNA0-AfHrGksC_G0ojIe9xRzqEDfiKSongnkAzFuMjJ6mw%3D%3D", notificationFormModel);
         if (response.IsSuccessStatusCode)
             {
                 var user = await response.Content.ReadFromJsonAsync<ApplicationUser>();
