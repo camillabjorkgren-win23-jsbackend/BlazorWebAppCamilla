@@ -12,61 +12,64 @@
             <p>Already have an account? <NavLink href="/signin">Sign in here.</NavLink></p>
         </div>
 
-        @if (!string.IsNullOrEmpty(@statusMessage))
+        @if (!string.IsNullOrEmpty(statusMessage))
         {
             <div class="errormessage">
                 @statusMessage
             </div>
         }
-        <EditForm class="form" novalidate FormName="Signup" Model="SignUpForm" asp-route-returnUrl="@ReturnUrl" OnValidSubmit="OnValidSubmit">
+        <EditForm class="form" Model="SignUpForm" OnValidSubmit="OnValidSubmit" novalidate>
             <DataAnnotationsValidator />
+            <ValidationSummary />
+
             <div class="name">
                 <div class="first-name">
                     <div class="mb-3">
                         <label class="form-label">First name</label>
-                        <ValidationMessage For="() => SignUpForm.FirstName" class="text-danger" />
                         <InputText class="form-control" @bind-Value="SignUpForm.FirstName" />
+                        <ValidationMessage For="() => SignUpForm.FirstName" class="text-danger" />
                     </div>
                 </div>
                 <div class="last-name">
                     <div class="mb-3">
                         <label class="form-label">Last name</label>
-                        <ValidationMessage For="() => SignUpForm.LastName" class="text-danger" />
                         <InputText class="form-control" @bind-Value="SignUpForm.LastName" />
+                        <ValidationMessage For="() => SignUpForm.LastName" class="text-danger" />
                     </div>
                 </div>
             </div>
+
             <div class="mb-3">
                 <label class="form-label">Email</label>
-                <ValidationMessage For="() =>SignUpForm.Email" class="text-danger" />
                 <InputText class="form-control" type="email" @bind-Value="SignUpForm.Email" />
+                <ValidationMessage For="() => SignUpForm.Email" class="text-danger" />
             </div>
+
             <div class="mb-3">
                 <label class="form-label">Password</label>
-                <ValidationMessage For="() => SignUpForm.Password" class=" text-danger" />
                 <InputText class="form-control" type="password" @bind-Value="SignUpForm.Password" />
+                <ValidationMessage For="() => SignUpForm.Password" class="text-danger" />
             </div>
+
             <div class="mb-3">
                 <label class="form-label">Confirm Password</label>
-                <ValidationMessage For="() => SignUpForm.ConfirmPassword" class=" text-danger" />
                 <InputText class="form-control" type="password" @bind-Value="SignUpForm.ConfirmPassword" />
+                <ValidationMessage For="() => SignUpForm.ConfirmPassword" class="text-danger" />
             </div>
+
             <div class="mb-3 form-check">
                 <InputCheckbox @bind-Value="SignUpForm.TermsAndConditions" class="form-check-input" />
-                <label class="form-check-label">I agree to the <NavLink href="/Terms">Terms & Conditions</NavLink> </label>
-                <ValidationMessage For="() => SignUpForm.TermsAndConditions" class=" text-danger" />
+                <label class="form-check-label">I agree to the <NavLink href="/Terms">Terms & Conditions</NavLink></label>
+                <ValidationMessage For="() => SignUpForm.TermsAndConditions" class="text-danger" />
             </div>
+
             <button type="submit" class="btn-theme-s">Sign Up</button>
         </EditForm>
-
-
     </div>
 </section>
 
-
 @code {
-    [SupplyParameterFromQuery]
-    public string statusMessage { get; set; } = "";
+    public string statusMessage = "";
 
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
@@ -74,40 +77,39 @@
     [SupplyParameterFromForm]
     public SignUpFormModel SignUpForm { get; set; } = new();
 
+   
     public class SignUpFormModel
     {
         [Display(Name = "First name", Prompt = "Enter your first name", Order = 0)]
         [Required(ErrorMessage = "First name is required")]
-        [MinLength(2, ErrorMessage = "Enter a first name")]
+        [MinLength(2, ErrorMessage = "First name must be at least 2 characters long")]
         public string FirstName { get; set; } = null!;
 
         [Display(Name = "Last name", Prompt = "Enter your last name", Order = 1)]
         [Required(ErrorMessage = "Last name is required")]
-        [MinLength(2, ErrorMessage = "Enter a last name")]
+        [MinLength(2, ErrorMessage = "Last name must be at least 2 characters long")]
         public string LastName { get; set; } = null!;
 
         [DataType(DataType.EmailAddress)]
         [Display(Name = "Email address", Prompt = "Enter your email address", Order = 2)]
         [Required(ErrorMessage = "Email is required")]
-        [RegularExpression("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{1,}$", ErrorMessage = "Invalid email address")]
+        [RegularExpression("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid email address")]
         public string Email { get; set; } = null!;
 
         [DataType(DataType.Password)]
         [Display(Name = "Password", Prompt = "Enter your password", Order = 3)]
         [Required(ErrorMessage = "A strong password is required")]
-        [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[@$!%*?&])[a-zA-Z0-9@$!%*?&]{8,}$", ErrorMessage = "Invalid password, must be a strong password")]
+        [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[@$!%*?&])[a-zA-Z0-9@$!%*?&]{8,}$", ErrorMessage = "Password must be at least 8 characters long, and include letters, numbers, and special characters")]
         public string Password { get; set; } = null!;
-
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password", Prompt = "Confirm your password", Order = 4)]
-        [Required(ErrorMessage = "Password must be confirmed")]
-        [Compare(nameof(Password), ErrorMessage = "Fields do not match")]
+        [Required(ErrorMessage = "Password confirmation is required")]
+        [Compare(nameof(Password), ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; } = null!;
 
-        [Display(Name = "I agree to the Terms & Conditions.", Order = 5)]
+        [Display(Name = "I agree to the Terms & Conditions", Order = 5)]
         [Required(ErrorMessage = "You must agree to the Terms & Conditions")]
-        // [CheckboxRequired(ErrorMessage = "You must accept the terms and conditions to proceed.")]
         public bool TermsAndConditions { get; set; } = false;
     }
 
@@ -151,11 +153,8 @@
             await Http.PostAsJsonAsync(Configuration.GetValue<string>("API:GenerateCodeHTTP"), new { Email = SignUpForm.Email });
             if (UserManager.Options.SignIn.RequireConfirmedAccount)
             {
-                RedirectManager.RedirectTo("Account/RegisterConfirmation", new() { ["email"] = user.Email, ["returnUrl"] = ReturnUrl });
+                NavigationManager.NavigateTo($"Account/RegisterConfirmation?email={user.Email}&returnUrl={ReturnUrl}");
             }
-
-            await SignInManager.SignInAsync(user, isPersistent: false);
-            RedirectManager.RedirectTo(ReturnUrl);
         }
         catch (Exception ex)
         {

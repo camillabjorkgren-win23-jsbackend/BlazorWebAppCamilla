@@ -10,8 +10,7 @@
 @inject NavigationManager Navigation
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ThemeService ThemeService
-@using Microsoft.JSInterop
-@inject IJSRuntime JS
+
 
 <div class="content">
     <div class="password-form">
@@ -96,10 +95,6 @@
     {
         user = await UserDataService.GetUserDataAsync();
 
-        isDarkMode = await ThemeService.GetThemeAsync();
-
-        // var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        // var user = await UserManager.GetUserAsync(authState.User);
 
         if (user != null && user.PreferredEmail != null)
         {
@@ -123,13 +118,10 @@
                     UserId = user.Id
                 };
 
-            var response = await Http.PostAsJsonAsync("http://localhost:7074/api/UpdateUserNotifications", notificationFormModel);
+            var response = await Http.PostAsJsonAsync("https://userprovider-silicon-camilla.azurewebsites.net/api/UpdateUserNotifications?code=-JYhCwgslNA0-AfHrGksC_G0ojIe9xRzqEDfiKSongnkAzFuMjJ6mw%3D%3D", notificationFormModel);
             if (response.IsSuccessStatusCode)
             {
                 var user = await response.Content.ReadFromJsonAsync<ApplicationUser>();
-
-                var theme = user.DarkMode ? "dark" : "light";
-                await JS.InvokeVoidAsync("updateTheme", theme);
 
                 StateHasChanged();
 

@@ -1,7 +1,6 @@
 using BlazorWebAppCamilla.Components;
 using BlazorWebAppCamilla.Components.Account;
 using BlazorWebAppCamilla.Data;
-using BlazorWebAppCamilla.Hubs;
 using BlazorWebAppCamilla.Services;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.SystemTextJson;
@@ -12,12 +11,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpContextAccessor();
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
-builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
@@ -41,7 +40,6 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.ConfigureApplicationCookie(x =>
 {
-    //webbläsaren kan inte komma åt cookien, minimerar risk för crossside-scripting
     x.Cookie.HttpOnly = true;
     x.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     x.LoginPath = "/signin";

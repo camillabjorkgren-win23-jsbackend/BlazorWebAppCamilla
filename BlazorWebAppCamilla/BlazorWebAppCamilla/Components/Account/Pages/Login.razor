@@ -21,6 +21,13 @@
             <p>Don't have an account yet? <a href="signup.html">Sign up here.</a></p>
         </div>
 
+        @if(!String.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger" role="alert">
+                @errorMessage
+            </div>
+        }
+
         <EditForm method="post" class="form" Model="SignIn" novalidate OnValidSubmit="LoginUser" FormName="SignInForm">
             <DataAnnotationsValidator />
             <div class="mb-3">
@@ -63,20 +70,18 @@
     }
 
     public async Task LoginUser()
-    {
+    { 
+        var noExists = await SignInManager.UserManager.FindByEmailAsync(SignIn.Email);
+        if (noExists == null)
+        {
+            errorMessage = "Error: No user found.";
+            return;
+        }
         var result = await SignInManager.PasswordSignInAsync(SignIn.Email, SignIn.Password, SignIn.RememberMe, lockoutOnFailure: false);
+    
         if (result.Succeeded)
         {
-            var user = await SignInManager.UserManager.FindByEmailAsync(SignIn.Email);
-            if(user != null)
-            {
-                var response = await Http.PostAsJsonAsync("https://tokenprovider-silicon-camilla.azurewebsites.net/api/token/generate?code=5PUctt7AEruT_udVWkJHgtdAWfV4KQ4Iir7S78fKAB4KAzFu3nznsg%3D%3D", new { userId = user.Id, email = user.Email });
-                if (response.IsSuccessStatusCode)
-                {
-                    Logger.LogInformation("User logged in.");
-                    RedirectManager.RedirectTo(ReturnUrl);
-                }              
-            }           
+            RedirectManager.RedirectTo("/profile/details");          
         }
         else
         {

@@ -19,7 +19,10 @@
     <div class="container">
         <h1>Register confirmation</h1>
 
-
+        @if (!string.IsNullOrEmpty(statusMessage))
+        {
+            <p>@statusMessage</p>
+        }
 
         <h1>Verify Your Account</h1>
         <p>Didn't receive an email?<button @onclick="ResendCode">Resend Code</button></p>
@@ -67,10 +70,22 @@
         if (result.IsSuccessStatusCode)
         {
             var user = await UserManager.FindByEmailAsync(Email!);
-            user!.EmailConfirmed = true;
-            await UserManager.UpdateAsync(user);     
-            statusMessage = "Your account has been confirmed successfully.";
-            await SignInAsync(user);
+            if(user != null)
+            {
+                try
+                {
+                    user!.EmailConfirmed = true;
+                    await UserManager.UpdateAsync(user);
+                    statusMessage = "Your account has been confirmed successfully.";
+
+                    NavigationManager.NavigateTo("/signin");
+                }
+                catch (Exception ex)
+                {
+                    statusMessage = "Error logging in.";
+                }
+        }
+
         }
         else
         {
@@ -78,11 +93,7 @@
         }
     }
 
-    private async Task SignInAsync(ApplicationUser user)
-    {    
-        await SignInManager.SignInAsync(user, isPersistent: false);
-        RedirectManager.RedirectTo(ReturnUrl);
-    }
+    
 
     private async Task ResendCode()
     {

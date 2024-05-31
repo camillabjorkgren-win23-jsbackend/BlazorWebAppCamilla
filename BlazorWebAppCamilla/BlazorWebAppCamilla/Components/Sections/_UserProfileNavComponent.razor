@@ -44,7 +44,6 @@ else
                     Sign Out
                 </button>
             </form>
-            @* <button @onclick="Logout" class="signout"><i class="fa-light fa-right-from-bracket i"></i> Sign Out</button> *@
 
         </div>
     </div>
@@ -87,7 +86,7 @@ else
                     if (filePath != null)
                         await UpdateUserProfileImagePath(filePath, User.Id);
 
-                    StateHasChanged();
+                    await InvokeAsync(StateHasChanged);
                 }
             }
             catch (Exception ex)
@@ -106,7 +105,7 @@ else
                 ProfileImg = filePath,
                 UserId = userId
             };
-        var response = await Http.PostAsJsonAsync("http://localhost:7074/api/UpdateProfileImage", userProfileModel);
+        var response = await Http.PostAsJsonAsync("https://userprovider-silicon-camilla.azurewebsites.net/api/UpdateProfileImage?code=RO2LPVK8k1ZtaoGautW_cbJ4IqUr3LLi5JZk7dM4p7tTAzFuuFu2Vg%3D%3D", userProfileModel);
         if (response.IsSuccessStatusCode)
         {
             return true;

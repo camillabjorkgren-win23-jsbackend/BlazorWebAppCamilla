@@ -40,3 +40,6 @@
 @using Microsoft.EntityFrameworkCore
 @using BlazorWebAppCamilla.Services
 @using BlazorWebAppCamilla.Components.Account.Shared
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject IJSRuntime JS
+@using static BlazorWebAppCamilla.Components.Sections._cookieconsent

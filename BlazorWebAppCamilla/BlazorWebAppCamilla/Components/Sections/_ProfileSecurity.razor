@@ -1,30 +1,32 @@
 ﻿@page "/profile/security"
 @layout ManageLayout
 
-@rendermode InteractiveServer
-@attribute [StreamRendering]
+
 @inject UserManager<ApplicationUser> UserManager
 @inject UserDataService UserDataService
-
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IdentityUserAccessor UserAccessor
+@inject IdentityRedirectManager RedirectManager
+@inject NavigationManager NavigationManager
 
 <div class="content">
     <div class="password-form">
         <h2 class="title">Security</h2>
         <h6>Password</h6>
 
-        @if (!string.IsNullOrEmpty(@statusMessage))
+        @if (!string.IsNullOrEmpty(statusMessage))
         {
             <div class="errormessage">
                 @statusMessage
             </div>
         }
-        <EditForm class="form-password form" method="post" Model="PasswordForm" FormName="ChangePassword" OnValidSubmit="SubmitPassword" novalidate>
+        <EditForm class="form-password form" Model="PasswordForm" OnValidSubmit="SubmitPassword" novalidate>
             <DataAnnotationsValidator />
             <div class="current-password">
                 <label class="form-label">Current password</label>
                 <div class="mb-3">
                     <InputText @bind-Value="PasswordForm.CurrentPassword" type="password" class="form-control" />
-                    <ValidationMessage For="() =>PasswordForm.CurrentPassword" class="text-danger" />
+                    <ValidationMessage For="() => PasswordForm.CurrentPassword" class="text-danger" />
                 </div>
             </div>
 
@@ -32,13 +34,13 @@
                 <div class="new-password">
                     <label class="form-label">New password</label>
                     <InputText @bind-Value="PasswordForm.NewPassword" type="password" id="new-password" class="form-control" />
-                    <ValidationMessage For="() =>PasswordForm.NewPassword" class="text-danger" />
+                    <ValidationMessage For="() => PasswordForm.NewPassword" class="text-danger" />
                 </div>
 
                 <div class="confirm-password">
                     <label class="form-label">Confirm new password</label>
                     <InputText @bind-Value="PasswordForm.ConfirmPassword" type="password" class="form-control" />
-                    <ValidationMessage For="() =>PasswordForm.ConfirmPassword" class="text-danger" />
+                    <ValidationMessage For="() => PasswordForm.ConfirmPassword" class="text-danger" />
                 </div>
             </div>
             <div class="buttons">
@@ -53,11 +55,12 @@
     <div class="delete-account">
         <h6>Delete account</h6>
         <p>When you delete your account, your public profile will be deactivated immediately. If you change your mind before the 14 days are up, sign in with your email and password, and we’ll send you a link to reactivate your account.</p>
-        <EditForm class="form" method="post" Model="DeleteAccount" OnValidSubmit="SubmitDelete">
-             <DataAnnotationsValidator/>
+        <EditForm class="form" Model="DeleteAccount" FormName="Delete" OnValidSubmit="SubmitDelete">
+            <DataAnnotationsValidator />
             <div class="checkbox-group">
                 <InputCheckbox @bind-Value="DeleteAccount.CheckDeleteAccount" />
                 <label>Yes, I want to delete my account.</label>
+                <ValidationMessage For="() => DeleteAccount.CheckDeleteAccount" class="text-danger" />
             </div>
             <button type="submit" class="button btn-red">Delete</button>
         </EditForm>
@@ -65,11 +68,18 @@
 </div>
 
 @code {
-    [SupplyParameterFromQuery]
+    private string? currentUrl;
     public string statusMessage { get; set; } = "";
 
     public PasswordFormModel PasswordForm { get; set; } = new();
 
+    [CascadingParameter]
+    public ApplicationUser user { get; set; } = new ApplicationUser();
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm]
     public DeleteAccountModel DeleteAccount { get; set; } = new();
 
     public class PasswordFormModel
@@ -92,17 +102,16 @@
         public string ConfirmPassword { get; set; } = null!;
     }
 
-
     public class DeleteAccountModel
     {
         [Display(Name = "Yes, I want to delete my account.", Order = 3)]
         [Required(ErrorMessage = "You must check the box to proceed")]
-        public bool CheckDeleteAccount { get; set; } = false;
+        public bool CheckDeleteAccount { get; set; }
     }
 
     private async Task SubmitPassword()
     {
-        ApplicationUser user = await UserDataService.GetUserDataAsync();
+        user = await UserDataService.GetUserDataAsync();
         if (user != null)
         {
             var passwordResult = UserManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash!, PasswordForm.CurrentPassword);
@@ -113,8 +122,10 @@
                 {
                     statusMessage = "An error occurred during a try to change password, please try again";
                 }
-                statusMessage = "Password changed successfully";
-
+                else
+                {
+                    statusMessage = "Password changed successfully";
+                }
             }
             else
             {
@@ -123,24 +134,29 @@
         }
     }
 
-    private async Task SubmitDelete()
+    private async Task SubmitDelete(EditContext editContext)
     {
-        ApplicationUser user = await UserDataService.GetUserDataAsync();
+        user = await UserDataService.GetUserDataAsync();
         if (user != null)
         {
-            var response = await UserDataService.DeleteAccount(user, DeleteAccount.CheckDeleteAccount);
-            if (response)
+            try
             {
-                await SignInManager.SignOutAsync();
-                NavigationManager.NavigateTo("/");
+                var response = await UserDataService.DeleteAccount(user, DeleteAccount.CheckDeleteAccount);
+                if (response)
+                {
+                    await SignInManager.SignOutAsync();
+                    NavigationManager.NavigateTo("/");
+
+                }
+                else
+                {
+                    statusMessage = "An error occurred, please try again";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                statusMessage = "An error occurred, please try again";
+                statusMessage = ex.Message;
             }
         }
     }
-
-   
 }
-
