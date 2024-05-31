@@ -1,5 +1,4 @@
-﻿@inject  UserDataService UserDataService
-
+﻿
 <header>
     <div class="container">
         <NavLink id="logo" href="/"><img src="/images/logo/silicon-logo.svg" alt="Logotype for Silicon"></NavLink>
@@ -74,9 +73,5 @@
 @code {
     [Parameter]
     public ApplicationUser User { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        User = await UserDataService.GetUserDataAsync();
-    }
+  
 }

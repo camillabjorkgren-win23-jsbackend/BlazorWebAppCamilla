@@ -43,7 +43,7 @@
 
             <div id="theme-switch" class="btn-switch">
                 <label class="switch" for="theme-switch-mode">
-                    <InputCheckbox @bind-Value="Notifications.DarkMode" checked="@isDarkMode" type="checkbox" id="theme-switch-mode" />
+                    <InputCheckbox @bind-Value="Notifications.DarkMode" type="checkbox" id="theme-switch-mode" />
                     <span class="slider round"></span>
                 </label>
                 <label>Use Dark Mode Theme in Application</label>
@@ -65,7 +65,6 @@
 
 
 @code {
-    private bool isDarkMode = false;
     [SupplyParameterFromQuery]
     public string statusMessage { get; set; } = "";
 
@@ -103,8 +102,6 @@
             Notifications.DarkMode = user.DarkMode;
         }
     }
-
-
 
     private async Task SubmitNotifications(NotificationsFormModel notifications)
     {

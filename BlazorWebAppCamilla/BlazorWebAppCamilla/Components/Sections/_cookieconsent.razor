@@ -1,4 +1,4 @@
-﻿@rendermode InteractiveServer
+﻿@* @rendermode InteractiveServer
 @attribute [StreamRendering]
 @using Microsoft.JSInterop
 @inject IJSRuntime JS
@@ -16,8 +16,6 @@
 
 @code {
 
-    [Inject]
-    IHttpContextAccessor HttpContextAccessors { get; set; }
 
     public async Task HandleConsent()
     {
@@ -40,5 +38,5 @@
     }
 }
 
-
+ *@
  
