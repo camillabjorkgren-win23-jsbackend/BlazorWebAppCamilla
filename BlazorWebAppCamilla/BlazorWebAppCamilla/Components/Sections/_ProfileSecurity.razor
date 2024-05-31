@@ -1,12 +1,14 @@
 ﻿@page "/profile/security"
 @layout ManageLayout
+@rendermode InteractiveServer
 
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Identity
 
 @inject UserManager<ApplicationUser> UserManager
 @inject UserDataService UserDataService
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityUserAccessor UserAccessor
-@inject IdentityRedirectManager RedirectManager
 @inject NavigationManager NavigationManager
 
 <div class="content">
@@ -71,6 +73,10 @@
     private string? currentUrl;
     public string statusMessage { get; set; } = "";
 
+    public class Link
+    {
+        public string Url { get; set; } = "/logut";
+    }
     public PasswordFormModel PasswordForm { get; set; } = new();
 
     [CascadingParameter]
@@ -109,7 +115,7 @@
         public bool CheckDeleteAccount { get; set; }
     }
 
-    private async Task SubmitPassword()
+    public async Task SubmitPassword()
     {
         user = await UserDataService.GetUserDataAsync();
         if (user != null)
@@ -134,24 +140,19 @@
         }
     }
 
-    private async Task SubmitDelete(EditContext editContext)
+    public async Task SubmitDelete(EditContext editContext)
     {
         user = await UserDataService.GetUserDataAsync();
         if (user != null)
         {
             try
-            {
+            {              
                 var response = await UserDataService.DeleteAccount(user, DeleteAccount.CheckDeleteAccount);
                 if (response)
                 {
-                    await SignInManager.SignOutAsync();
-                    NavigationManager.NavigateTo("/");
+                    NavigationManager.NavigateTo("/logout");
+                }
 
-                }
-                else
-                {
-                    statusMessage = "An error occurred, please try again";
-                }
             }
             catch (Exception ex)
             {
@@ -159,4 +160,6 @@
             }
         }
     }
+
+    
 }

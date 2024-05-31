@@ -7,7 +7,7 @@
             <div class="arrows"><img src="/images/arrows.svg" alt="arrows"></div>
         </div>
         <EditForm method="post" FormName="subscribeform" Model="SubscribeForm" OnValidSubmit="OnValidSubmit" novalidate>
-            <DataAnnotationsValidator/>
+            <DataAnnotationsValidator />
             <div class="sign-up-checkbox">
                 <h6>Sign up for Newsletters</h6>
                 <div class="grid">
@@ -16,15 +16,15 @@
                         <label>Daily Newsletter</label>
                     </div>
                     <div class="checkbox">
-                        <InputCheckbox  @bind-Value="SubscribeForm.AdvertisingUpdates" />
+                        <InputCheckbox @bind-Value="SubscribeForm.AdvertisingUpdates" />
                         <label>Advertising updates</label>
                     </div>
                     <div class="checkbox">
-                        <InputCheckbox  @bind-Value="SubscribeForm.WeekInReview" />
+                        <InputCheckbox @bind-Value="SubscribeForm.WeekInReview" />
                         <label>Week in Review</label>
                     </div>
                     <div class="checkbox">
-                        <InputCheckbox  @bind-Value="SubscribeForm.EventUpdates" />
+                        <InputCheckbox @bind-Value="SubscribeForm.EventUpdates" />
                         <label>Event Updates</label>
                     </div>
                     <div class="checkbox">
@@ -47,14 +47,14 @@
 
             <span class="information">
                 <ValidationMessage For="@(() => SubscribeForm.UserEmail)" class="alert-danger-pop" />
-                    <span class="terms">@StatusMessage</span>  
+                <span class="terms">@StatusMessage</span>
             </span>
         </EditForm>
 
 
     </div>
 </section>
-@* <script defer src="~/js/validation.js"></script> *@
+
 
 @code {
     [SupplyParameterFromQuery]
@@ -71,21 +71,22 @@
     {
         try
         {
-                var result = await Http.PostAsJsonAsync(https://newsletterprovider-silicon-camilla.azurewebsites.net/api/Subscribe?code=xlAYAvA90Wpgn_ZFyyYauReZ4dKASqe5ZrhsD6WPrcWeAzFuUYC8iA%3D%3D", SubscribeForm);
-         if (result.IsSuccessStatusCode)
+            var result = await Http.PostAsJsonAsync("https://newsletterprovider-silicon-camilla.azurewebsites.net/api/Subscribe?code=xlAYAvA90Wpgn_ZFyyYauReZ4dKASqe5ZrhsD6WPrcWeAzFuUYC8iA%3D%3D", SubscribeForm);
+            if (result.IsSuccessStatusCode)
                 StatusMessage = "Thank you for subscribing!";
             else
             {
-                StatusMessage= "Unable to subscribe right now. Please try again later.";
+                StatusMessage = "Unable to subscribe right now. Please try again later.";
             }
         }
-        catch 
+        catch
         {
-            StatusMessage = "Unable to subscribe right now. Please try again later."; 
+            StatusMessage = "Unable to subscribe right now. Please try again later.";
         }
         SubscribeForm = new SubscribeFormModel();
-
     }
+
+
 
     public class SubscribeFormModel
     {
@@ -115,3 +116,5 @@
 
     }
 }
+
+

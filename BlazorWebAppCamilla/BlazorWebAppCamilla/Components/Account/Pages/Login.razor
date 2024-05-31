@@ -78,9 +78,10 @@
             return;
         }
         var result = await SignInManager.PasswordSignInAsync(SignIn.Email, SignIn.Password, SignIn.RememberMe, lockoutOnFailure: false);
-    
+
         if (result.Succeeded)
         {
+            
             RedirectManager.RedirectTo("/profile/details");          
         }
         else

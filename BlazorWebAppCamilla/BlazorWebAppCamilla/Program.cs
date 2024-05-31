@@ -43,7 +43,6 @@ builder.Services.ConfigureApplicationCookie(x =>
     x.Cookie.HttpOnly = true;
     x.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     x.LoginPath = "/signin";
-    x.LogoutPath = "/signout";
     x.ExpireTimeSpan = TimeSpan.FromMinutes(60);
     x.SlidingExpiration = true;
 });
