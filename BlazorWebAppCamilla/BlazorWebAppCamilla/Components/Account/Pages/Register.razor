@@ -18,7 +18,7 @@
                 @statusMessage
             </div>
         }
-        <EditForm class="form" Model="SignUpForm" OnValidSubmit="OnValidSubmit" novalidate>
+        <EditForm class="form" Model="SignUpForm" FormName="register" OnValidSubmit="OnValidSubmit" novalidate>
             <DataAnnotationsValidator />
             <ValidationSummary />
 
@@ -77,7 +77,7 @@
     [SupplyParameterFromForm]
     public SignUpFormModel SignUpForm { get; set; } = new();
 
-   
+
     public class SignUpFormModel
     {
         [Display(Name = "First name", Prompt = "Enter your first name", Order = 0)]
@@ -115,6 +115,11 @@
 
     public async Task OnValidSubmit(EditContext editContext)
     {
+        if(!SignUpForm.TermsAndConditions)
+        {
+            statusMessage = "You must agree to the Terms & Conditions";
+            return;
+        }
         var user = new ApplicationUser
             {
                 UserProfile = new UserProfile
@@ -125,7 +130,9 @@
                 UserName = SignUpForm.Email,
                 Email = SignUpForm.Email,
                 Created = DateTime.Now,
+
             };
+
 
         try
         {
@@ -136,6 +143,15 @@
                 return;
             }
             var result = await UserManager.CreateAsync(user, SignUpForm.Password);
+            if (result.Succeeded)
+            {
+                var roleResult = await UserManager.AddToRoleAsync(user, "User");
+                if(!roleResult.Succeeded)
+                {
+                    statusMessage = "Unable to register roles in account. Please try again.";
+                    return;
+                }
+            }
             if (!result.Succeeded)
             {
                 statusMessage = "Unable to register account. Please try again.";
