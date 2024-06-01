@@ -358,7 +358,7 @@ img {
 
 .chat-bubble-right {
   text-align: right;
-  background-color: #d1ffd6;
+  background-color: var(--color-theme);
   margin-left: auto;
   border-radius: 15px;
   padding: 10px;
