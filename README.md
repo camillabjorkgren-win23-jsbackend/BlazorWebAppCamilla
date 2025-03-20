@@ -25,4 +25,4 @@ Project Structure
 The project is organized into several folders to maintain code organization:
 - Data: Contains database models, migrations, and configurations related to Entity Framework Core.
 - BlazorWebAppCamilla: The main Blazor application, including components, pages, and services.
-- It is built around several microservices, see my organization: 
+- It is built around several microservices, see my organization: https://github.com/orgs/camillabjorkgren-win23-jsbackend/repositories
