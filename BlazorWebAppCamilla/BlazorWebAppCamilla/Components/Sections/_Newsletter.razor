@@ -71,7 +71,7 @@
     {
         try
         {
-            var result = await Http.PostAsJsonAsync("https://newsletterprovider-silicon-camilla.azurewebsites.net/api/Subscribe?code=xlAYAvA90Wpgn_ZFyyYauReZ4dKASqe5ZrhsD6WPrcWeAzFuUYC8iA%3D%3D", SubscribeForm);
+            var result = await Http.PostAsJsonAsync("https://newsletter-provider-aqagdygje7ckdsda.westeurope-01.azurewebsites.net/api/Subscribe?code=M33hoWeCP9NBbn5MnXL0OR2zCVgJu5koKB-F9bMB8eA7AzFusVedMg==", SubscribeForm);
             if (result.IsSuccessStatusCode)
                 StatusMessage = "Thank you for subscribing!";
             else
