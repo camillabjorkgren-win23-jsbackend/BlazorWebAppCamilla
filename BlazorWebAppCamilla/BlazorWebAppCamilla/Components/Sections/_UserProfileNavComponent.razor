@@ -79,7 +79,7 @@ else
 
             try
             {
-                var response = await Http.PostAsync("***REMOVED***", content);
+                var response = await Http.PostAsync(Environment.GetEnvironmentVariable("API_FileProvider_Upload"), content);
                 if (response.IsSuccessStatusCode)
                 {
                     var filePath = await response.Content.ReadAsStringAsync();
@@ -105,7 +105,7 @@ else
                 ProfileImg = filePath,
                 UserId = userId
             };
-        var response = await Http.PostAsJsonAsync("***REMOVED***", userProfileModel);
+        var response = await Http.PostAsJsonAsync(Environment.GetEnvironmentVariable("API_UserProvider_Image"), userProfileModel);
         if (response.IsSuccessStatusCode)
         {
             return true;

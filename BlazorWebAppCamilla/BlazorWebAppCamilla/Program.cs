@@ -71,7 +71,7 @@ builder.Services.AddAuthorization(x =>
     x.AddPolicy("Users", policy => policy.RequireRole("SuperAdmin", "CIO", "Admin", "User"));
 });
 
-builder.Services.AddSingleton(s => new GraphQLHttpClient("***REMOVED***", new SystemTextJsonSerializer()));
+builder.Services.AddSingleton(s => new GraphQLHttpClient(Environment.GetEnvironmentVariable("API_GraphQL_Courses"), new SystemTextJsonSerializer()));
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 builder.Services.AddSignalR();
 

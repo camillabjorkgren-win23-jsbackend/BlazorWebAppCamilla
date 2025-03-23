@@ -71,7 +71,7 @@
     {
         try
         {
-            var result = await Http.PostAsJsonAsync("***REMOVED***", SubscribeForm);
+            var result = await Http.PostAsJsonAsync(Environment.GetEnvironmentVariable("API_Newsletter_Subscribe"), SubscribeForm);
             if (result.IsSuccessStatusCode)
                 StatusMessage = "Thank you for subscribing!";
             else

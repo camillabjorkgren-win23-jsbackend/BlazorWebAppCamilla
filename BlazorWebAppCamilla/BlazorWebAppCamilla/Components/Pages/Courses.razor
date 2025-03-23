@@ -200,7 +200,7 @@
                             Query = "{getCourses {id imageUri isDigital isBestseller likes hours likesInProcent isBookmarked title authors{name} prices {price discount}}}"
                         };
 
-                    var response = await Http.PostAsJsonAsync("***REMOVED***", query);
+                    var response = await Http.PostAsJsonAsync(Environment.GetEnvironmentVariable("API_GraphQL_Courses"), query);
 
                     if (response.IsSuccessStatusCode)
                     {
