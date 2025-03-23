@@ -200,7 +200,7 @@
                             Query = "{getCourses {id imageUri isDigital isBestseller likes hours likesInProcent isBookmarked title authors{name} prices {price discount}}}"
                         };
 
-                    var response = await Http.PostAsJsonAsync("https://courseprovider-e8h6frh8e8gzahd0.swedencentral-01.azurewebsites.net/api/graphql?code=0pcIT_xX6Nvs3-sRqXLZiO_COdi72p49QzBXzaRD_U_jAzFuBpOszg==", query);
+                    var response = await Http.PostAsJsonAsync(Environment.GetEnvironmentVariable("API_GraphQL_Courses"), query);
 
                     if (response.IsSuccessStatusCode)
                     {

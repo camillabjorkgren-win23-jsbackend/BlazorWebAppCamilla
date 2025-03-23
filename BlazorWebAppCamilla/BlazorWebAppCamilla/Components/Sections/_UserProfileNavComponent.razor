@@ -79,7 +79,7 @@ else
 
             try
             {
-                var response = await Http.PostAsync("https://fileprovider-silicon-gtabhdgxa6dqdaah.westeurope-01.azurewebsites.net/api/Upload?code=3Kl2qSe1JfSRCPepyfuwF0fnHJLZ_Kv8t8uqOqMjQ_6oAzFuNIEC9A==", content);
+                var response = await Http.PostAsync(Environment.GetEnvironmentVariable("API_FileProvider_Upload"), content);
                 if (response.IsSuccessStatusCode)
                 {
                     var filePath = await response.Content.ReadAsStringAsync();
@@ -105,7 +105,7 @@ else
                 ProfileImg = filePath,
                 UserId = userId
             };
-        var response = await Http.PostAsJsonAsync("https://user-provider-gce3azfedjewhdfe.westeurope-01.azurewebsites.net/api/UpdateProfileImage?code=SUsR_bcyzFlY_oB71FGJKZbfjE50t8G7Zq02kjjhxZN0AzFu1QLxng==", userProfileModel);
+        var response = await Http.PostAsJsonAsync(Environment.GetEnvironmentVariable("API_UserProvider_Image"), userProfileModel);
         if (response.IsSuccessStatusCode)
         {
             return true;

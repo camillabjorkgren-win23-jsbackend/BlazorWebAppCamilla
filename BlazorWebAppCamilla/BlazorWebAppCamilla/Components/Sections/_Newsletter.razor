@@ -71,7 +71,7 @@
     {
         try
         {
-            var result = await Http.PostAsJsonAsync("https://newsletter-provider-aqagdygje7ckdsda.westeurope-01.azurewebsites.net/api/Subscribe?code=M33hoWeCP9NBbn5MnXL0OR2zCVgJu5koKB-F9bMB8eA7AzFusVedMg==", SubscribeForm);
+            var result = await Http.PostAsJsonAsync(Environment.GetEnvironmentVariable("API_Newsletter_Subscribe"), SubscribeForm);
             if (result.IsSuccessStatusCode)
                 StatusMessage = "Thank you for subscribing!";
             else

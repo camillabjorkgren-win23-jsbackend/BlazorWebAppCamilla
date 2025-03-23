@@ -71,7 +71,7 @@ builder.Services.AddAuthorization(x =>
     x.AddPolicy("Users", policy => policy.RequireRole("SuperAdmin", "CIO", "Admin", "User"));
 });
 
-builder.Services.AddSingleton(s => new GraphQLHttpClient("https://courseprovider-e8h6frh8e8gzahd0.swedencentral-01.azurewebsites.net/api/graphql?code=0pcIT_xX6Nvs3-sRqXLZiO_COdi72p49QzBXzaRD_U_jAzFuBpOszg==", new SystemTextJsonSerializer()));
+builder.Services.AddSingleton(s => new GraphQLHttpClient(Environment.GetEnvironmentVariable("API_GraphQL_Courses"), new SystemTextJsonSerializer()));
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 builder.Services.AddSignalR();
 

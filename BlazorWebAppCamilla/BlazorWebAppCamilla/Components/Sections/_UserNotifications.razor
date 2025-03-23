@@ -115,7 +115,7 @@
                     UserId = user.Id
                 };
 
-            var response = await Http.PostAsJsonAsync("https://user-provider-gce3azfedjewhdfe.westeurope-01.azurewebsites.net/api/UpdateUserNotifications?code=SUsR_bcyzFlY_oB71FGJKZbfjE50t8G7Zq02kjjhxZN0AzFu1QLxng==", notificationFormModel);
+            var response = await Http.PostAsJsonAsync(Environment.GetEnvironmentVariable("API_Notifications_User"), notificationFormModel);
         if (response.IsSuccessStatusCode)
             {
                 var user = await response.Content.ReadFromJsonAsync<ApplicationUser>();
