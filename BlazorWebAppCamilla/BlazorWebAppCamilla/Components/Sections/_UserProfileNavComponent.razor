@@ -31,16 +31,16 @@ else
             <p class="email">@User.Email</p>
         </div>
         <div class="btn-user">
-            <NavLink href="/profile/details"><button class="button btn active"><i class="fa-light fa-gear i"></i> Account Details</button></NavLink>
-            <NavLink href="/profile/security"><button class="button btn"><i class="fa-light fa-lock i"></i> Security</button></NavLink>
-            <NavLink href="/profile/notifications"><button class="button btn"><i class="fa-sharp fa-light fa-bell"></i> Notifications</button></NavLink>
-            <NavLink href="/profile/messages"><button class="button btn"><i class="fa-light fa-messages"></i> Messages</button></NavLink>
-            <NavLink href="/profile/saveditems"><button class="button btn"><i class="fa-light fa-bookmark i"></i> Saved Items</button></NavLink>
+            <NavLink href="/profile/details"><button class="button btn active"><i class="fa-solid fa-gear"></i> Account Details</button></NavLink>
+            <NavLink href="/profile/security"><button class="button btn"><i class="fa-solid fa-lock"></i> Security</button></NavLink>
+            <NavLink href="/profile/notifications"><button class="button btn"><i class="fa-sharp fa-solid fa-bell"></i> Notifications</button></NavLink>
+            <NavLink href="/profile/messages"><button class="button btn"><i class="fa-solid fa-messages"></i> Messages</button></NavLink>
+            <NavLink href="/profile/saveditems"><button class="button btn"><i class="fa-solid fa-bookmark"></i> Saved Items</button></NavLink>
             <form action="Account/Logout" method="post">
                 <AntiforgeryToken />
                 <input type="hidden" name="ReturnUrl" value="@currentUrl" />
                 <button type="submit" class="signout button btn">
-                    <i class="fa-light fa-right-from-bracket i"></i>
+                    <i class="fa-solid fa-right-from-bracket"></i>
                     Sign Out
                 </button>
             </form>
@@ -79,7 +79,7 @@ else
 
             try
             {
-                var response = await Http.PostAsync("https://fileprovider-silicon-camilla.azurewebsites.net/api/Upload?code=1QB_hXj1Q3ZqwiDbSzoIkK2XPN1wIgoFBifn-Q4ekUu_AzFubvPF5g%3D%3D", content);
+                var response = await Http.PostAsync("***REMOVED***", content);
                 if (response.IsSuccessStatusCode)
                 {
                     var filePath = await response.Content.ReadAsStringAsync();
@@ -105,7 +105,7 @@ else
                 ProfileImg = filePath,
                 UserId = userId
             };
-        var response = await Http.PostAsJsonAsync("https://userprovider-silicon-camilla.azurewebsites.net/api/UpdateProfileImage?code=RO2LPVK8k1ZtaoGautW_cbJ4IqUr3LLi5JZk7dM4p7tTAzFuuFu2Vg%3D%3D", userProfileModel);
+        var response = await Http.PostAsJsonAsync("***REMOVED***", userProfileModel);
         if (response.IsSuccessStatusCode)
         {
             return true;
