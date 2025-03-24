@@ -31,16 +31,16 @@ else
             <p class="email">@User.Email</p>
         </div>
         <div class="btn-user">
-            <NavLink href="/profile/details"><button class="button btn active"><i class="fa-solid fa-gear"></i> Account Details</button></NavLink>
-            <NavLink href="/profile/security"><button class="button btn"><i class="fa-solid fa-lock"></i> Security</button></NavLink>
-            <NavLink href="/profile/notifications"><button class="button btn"><i class="fa-sharp fa-solid fa-bell"></i> Notifications</button></NavLink>
-            <NavLink href="/profile/messages"><button class="button btn"><i class="fa-solid fa-messages"></i> Messages</button></NavLink>
-            <NavLink href="/profile/saveditems"><button class="button btn"><i class="fa-solid fa-bookmark"></i> Saved Items</button></NavLink>
+            <NavLink href="/profile/details"><button class="button btn active"><i class="fa-light fa-gear i"></i> Account Details</button></NavLink>
+            <NavLink href="/profile/security"><button class="button btn"><i class="fa-light fa-lock i"></i> Security</button></NavLink>
+            <NavLink href="/profile/notifications"><button class="button btn"><i class="fa-sharp fa-light fa-bell"></i> Notifications</button></NavLink>
+            <NavLink href="/profile/messages"><button class="button btn"><i class="fa-light fa-messages"></i> Messages</button></NavLink>
+            <NavLink href="/profile/saveditems"><button class="button btn"><i class="fa-light fa-bookmark i"></i> Saved Items</button></NavLink>
             <form action="Account/Logout" method="post">
                 <AntiforgeryToken />
                 <input type="hidden" name="ReturnUrl" value="@currentUrl" />
                 <button type="submit" class="signout button btn">
-                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <i class="fa-light fa-right-from-bracket i"></i>
                     Sign Out
                 </button>
             </form>

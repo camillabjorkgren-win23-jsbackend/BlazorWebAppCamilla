@@ -21,7 +21,7 @@
         <div class="content">
             <div class="title-button">
                 <h2 class="title">Saved Items</h2>
-                <EditForm FormName="RemoveAll" OnValidSubmit="RemoveAllUserCourse" Model="userId"><InputText type="hidden" name="userId" @bind-Value="@user!.Id" /><button type="submit" class="btn btn-delete"><i class="fa-solid fa-trash"></i>Delete all</button></EditForm>
+                <EditForm FormName="RemoveAll" OnValidSubmit="RemoveAllUserCourse" Model="userId"><InputText type="hidden" name="userId" @bind-Value="@user!.Id" /><button type="submit" class="btn btn-delete"><i class="fa-light fa-trash"></i>Delete all</button></EditForm>
             </div>
             <div class="course-list">
                 @if (CourseCards.Count == 0)
