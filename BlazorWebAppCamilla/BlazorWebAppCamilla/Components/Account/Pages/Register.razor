@@ -166,7 +166,7 @@
 
         try
         {
-            await Http.PostAsJsonAsync(Configuration.GetValue<string>("API:GenerateCodeHTTP"), new { Email = SignUpForm.Email });
+            await Http.PostAsJsonAsync(Environment.GetEnvironmentVariable("API_GenerateCodeHTTP"), new { Email = SignUpForm.Email });
             if (UserManager.Options.SignIn.RequireConfirmedAccount)
             {
                 NavigationManager.NavigateTo($"Account/RegisterConfirmation?email={user.Email}&returnUrl={ReturnUrl}");

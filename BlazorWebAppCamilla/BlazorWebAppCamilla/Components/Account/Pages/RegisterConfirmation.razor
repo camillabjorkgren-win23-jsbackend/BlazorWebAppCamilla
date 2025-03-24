@@ -62,7 +62,7 @@
 
     private async Task OnValidSubmit()
     {
-        var result = await Http.PostAsJsonAsync(Configuration.GetValue<string>("API:ValidateCode"), new
+        var result = await Http.PostAsJsonAsync(Environment.GetEnvironmentVariable("API_ValidateCode"), new
         {
             Email = Email,
             Code = VerifyCodeForm.Code
@@ -97,7 +97,7 @@
 
     private async Task ResendCode()
     {
-        var result = await Http.PostAsJsonAsync(Configuration.GetValue<string>("API:GenerateCodeHTTP"), new { Email = Email });
+        var result = await Http.PostAsJsonAsync(Environment.GetEnvironmentVariable("API_GenerateCodeHTTP"), new { Email = Email });
         if (result.IsSuccessStatusCode)
         {
             statusMessage = "Code resent";
