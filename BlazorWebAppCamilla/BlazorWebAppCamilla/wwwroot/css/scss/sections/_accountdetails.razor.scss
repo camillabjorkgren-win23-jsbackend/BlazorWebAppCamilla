@@ -70,6 +70,10 @@
             .btn-user {
                 width: 40%;
                 margin-top: 1rem;
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                height: 100%;
 
                 @include lg {
                     width: 70%;
@@ -83,13 +87,14 @@
                     color: var(--color-gray-900);
                     border: 1px solid transparent;
                     box-sizing: border-box;
+                    height: 100%;
 
                     &:hover {
                         border: 1px solid var(--color-gray-700);
                     }
 
                     .i {
-                        margin-right: 1rem;
+                        margin-right: 2rem;
                         display: none;
 
                         @include md {
@@ -101,6 +106,7 @@
                 .active {
                     background-color: var(--color-theme);
                     color: var(--color-white);
+                    height: 100%;
                 }
 
                 .signout {
@@ -109,7 +115,7 @@
                     width: 100%;
                     text-align: left;
                     margin-top: 1rem;
-                    margin-left: 1rem;
+                    
                 }
             }
 
