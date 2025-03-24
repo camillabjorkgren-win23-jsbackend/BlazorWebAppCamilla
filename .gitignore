@@ -11,7 +11,7 @@
 *.sln.docstates
 # Ignorera allt i .git förutom gitworkflows
 /.git/*
-!/gitworkflows/
+!/.github/workflows
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
