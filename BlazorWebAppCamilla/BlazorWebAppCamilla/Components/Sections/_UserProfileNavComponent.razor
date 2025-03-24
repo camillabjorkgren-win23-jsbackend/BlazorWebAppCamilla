@@ -13,9 +13,9 @@ else
     <div class="user">
         <div class="info">
             <div class="user-img">
-                @if (User.UserProfile != null)
+                @if (User != null && User.UserProfile != null && !string.IsNullOrEmpty(User.UserProfile.ProfileImg))
                 {
-                    <img src="@User.UserProfile.ProfileImg" alt="profile image">
+                    <img src="@User.UserProfile.ProfileImg" alt="profile image" onerror="this.onerror=null; this.src='/images/profile-image.svg';">
                 }
                 else
                 {
@@ -31,11 +31,11 @@ else
             <p class="email">@User.Email</p>
         </div>
         <div class="btn-user">
-            <NavLink href="/profile/details"><button class="button btn"><i class="fa-solid fa-gear"></i> Account Details</button></NavLink>
-            <NavLink href="/profile/security"><button class="button btn"><i class="fa-solid fa-lock"></i> Security</button></NavLink>
-            <NavLink href="/profile/notifications"><button class="button btn"><i class="fa-sharp fa-solid fa-bell"></i> Notifications</button></NavLink>
-            <NavLink href="/profile/messages"><button class="button btn"><i class="fa-solid fa-envelope"></i> Messages</button></NavLink>
-            <NavLink href="/profile/saveditems"><button class="button btn"><i class="fa-solid fa-bookmark"></i> Saved Items</button></NavLink>
+            <NavLink href="/profile/details" class="button btn" ActiveClass="active"><i class="fa-solid fa-gear"></i> Account Details</NavLink>
+            <NavLink href="/profile/security" class="button btn" ActiveClass="active"><i class="fa-solid fa-lock"></i> Security</NavLink>
+            <NavLink href="/profile/notifications" class="button btn" ActiveClass="active"><i class="fa-sharp fa-solid fa-bell"></i> Notifications</NavLink>
+            <NavLink href="/profile/messages" class="button btn" ActiveClass="active"><i class="fa-solid fa-envelope"></i> Messages</NavLink>
+            <NavLink href="/profile/saveditems" class="button btn" ActiveClass="active"><i class="fa-solid fa-bookmark"></i> Saved Items</NavLink>
             <form action="Account/Logout" method="post">
                 <AntiforgeryToken />
                 <input type="hidden" name="ReturnUrl" value="@currentUrl" />
@@ -75,11 +75,11 @@ else
             using var content = new MultipartFormDataContent();
             var fileContent = new StreamContent(selectedFile.OpenReadStream(maxAllowedSize: 1024 * 1024 * 15));
             fileContent.Headers.ContentType = new MediaTypeHeaderValue(selectedFile.ContentType);
-            content.Add(fileContent, "file", selectedFile!.Name);
+            content.Add(fileContent, "files", selectedFile!.Name);
 
             try
             {
-                var response = await Http.PostAsync(Environment.GetEnvironmentVariable("API_FileProvider_Upload"), content);
+                var response = await Http.PostAsync("http://localhost:7262/api/Upload", content);
                 if (response.IsSuccessStatusCode)
                 {
                     var filePath = await response.Content.ReadAsStringAsync();
@@ -105,6 +105,8 @@ else
                 ProfileImg = filePath,
                 UserId = userId
             };
+
+
         var response = await Http.PostAsJsonAsync(Environment.GetEnvironmentVariable("API_UserProvider_Image"), userProfileModel);
         if (response.IsSuccessStatusCode)
         {

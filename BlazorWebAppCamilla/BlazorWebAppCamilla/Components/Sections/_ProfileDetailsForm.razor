@@ -99,13 +99,12 @@
 
 
 @code {
-    // [CascadingParameter]
-    // public ApplicationUser user { get; set; }
-    private ApplicationUser user = default!;
+    [CascadingParameter]
+    public ApplicationUser user { get; set; } = default!;
+
     [SupplyParameterFromQuery]
     public string statusMessage { get; set; } = "";
-    [CascadingParameter]
-     private HttpContext HttpContext { get; set; } = default!;
+
     [SupplyParameterFromForm]
     private AccountDetailsForm DetailsForm { get; set; } = new();
 
@@ -155,12 +154,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        user = await UserManager.GetUserAsync(HttpContext.User);
-        if (user != null)
-        {
-            user = await ApplicationUserRepository.GetUserById(user.Id);
+       
             await LoadUserDataAsync();
-        }
+        
        
     }
 

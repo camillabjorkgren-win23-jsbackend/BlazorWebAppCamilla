@@ -7,6 +7,7 @@
             <nav>
                 <NavLink class="menu-link" href="/">Overview</NavLink>
                 <NavLink class="menu-link" href="/#features">Features</NavLink>
+              
                 <AuthorizeView>
                     <Authorized>
                         <NavLink class="menu-link" href="/courses">Courses</NavLink>
@@ -22,9 +23,9 @@
                     <div class="profile">
                         <div class="image">
                             <NavLink href="/profile/details">
-                                @if (User != null && User.UserProfile != null)
+                                @if (User != null && User.UserProfile != null && !string.IsNullOrEmpty(User.UserProfile.ProfileImg))
                                 {
-                                    <img src="@User.UserProfile.ProfileImg" alt="profile image">
+                                    <img src="@User.UserProfile.ProfileImg" alt="profile image" onerror="this.onerror=null; this.src='/images/profile-image.svg';">
                                 }
                                 else
                                 {
@@ -56,8 +57,8 @@
                         <li><NavLink href="/Courses">Courses</NavLink></li>
                         <li class="profile">
                         <div class="image">
-                             <NavLink href="/account"><img src="/uploads/avatar.jpg" alt="Profile image" /></NavLink>             
-                        </div>
+                                <NavLink href="/account"><img src="/images/profile-image.svg" alt="Profile image" /></NavLink>
+                            </div>
                     </li>
                     </Authorized>
                 </AuthorizeView>
