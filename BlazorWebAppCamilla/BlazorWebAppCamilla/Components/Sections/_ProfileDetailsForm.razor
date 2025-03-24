@@ -29,12 +29,13 @@
                 <label class="form-label">First name</label>
                 <div class="mb-3">
                     <InputText @bind-Value="DetailsForm.FirstName" class="form-control" />
-                    <ValidationMessage For="() => DetailsForm.LastName" type="text" class="text-danger" />
+                    <ValidationMessage For="() => DetailsForm.FirstName" type="text" class="text-danger" />
                 </div>
             </div>
             <div class="last-name">
                 <label class="form-label">Last name</label>
                 <InputText @bind-Value="DetailsForm.LastName" type="text" class="form-control" />
+                <ValidationMessage For="() => DetailsForm.LastName" type="text" class="text-danger" />
             </div>
         </div>
         <div class="contact-info">
@@ -165,8 +166,8 @@
 
             if (user != null)
             {
-                DetailsForm.FirstName = user.UserProfile?.FirstName;
-                DetailsForm.LastName = user.UserProfile?.LastName;
+                DetailsForm.FirstName = user.UserProfile.FirstName;
+                DetailsForm.LastName = user.UserProfile.LastName;
                 DetailsForm.Email = user.Email;
                 DetailsForm.Phone = user.PhoneNumber;
                 DetailsForm.Bio = user.UserProfile?.Bio;
