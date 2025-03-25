@@ -156,9 +156,9 @@
     {
         DetailsForm ??= new();
 
-            await LoadUserDataAsync();
-        
-       
+        await LoadUserDataAsync();
+
+
     }
 
 
@@ -170,15 +170,19 @@
 
             if (user != null)
             {
-                DetailsForm.FirstName = user.UserProfile.FirstName;
-                DetailsForm.LastName = user.UserProfile.LastName;
-                DetailsForm.Email = user.Email;
-                DetailsForm.Phone = user.PhoneNumber;
-                DetailsForm.Bio = user.UserProfile?.Bio;
-                DetailsForm.AddressLine_1 = user.UserAddress?.AddressLine_1;
-                DetailsForm.AddressLine_2 = user.UserAddress?.AddressLine_2;
-                DetailsForm.PostalCode = user.UserAddress?.PostalCode;
-                DetailsForm.City = user.UserAddress?.City;
+                DetailsForm = new AccountDetailsForm
+                    {
+                        FirstName = user.UserProfile.FirstName,
+                        LastName = user.UserProfile.LastName,
+                        Email = user.Email,
+                        Phone = user.PhoneNumber,
+                        Bio = user.UserProfile?.Bio,
+                        AddressLine_1 = user.UserAddress?.AddressLine_1,
+                        AddressLine_2 = user.UserAddress?.AddressLine_2,
+                        PostalCode = user.UserAddress?.PostalCode,
+                        City = user.UserAddress?.City
+                    };
+
             }
         }
         catch (Exception ex)
