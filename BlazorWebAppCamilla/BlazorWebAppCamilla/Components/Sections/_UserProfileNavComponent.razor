@@ -79,7 +79,7 @@ else
 
             try
             {
-                var response = await Http.PostAsync("http://localhost:7262/api/Upload", content);
+                var response = await Http.PostAsync(Environment.GetEnvironmentVariable("API_FileProvider_Upload"), content);
                 if (response.IsSuccessStatusCode)
                 {
                     var filePath = await response.Content.ReadAsStringAsync();
