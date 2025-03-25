@@ -3,7 +3,7 @@
 
 
 @layout ManageLayout
-
+@attribute [StreamRendering]
 @rendermode InteractiveServer
 
 @inject ThemeService ThemeService
@@ -22,7 +22,7 @@
         </div>
     }
 
-    <EditForm class="form-basicinfo form" method="post" FormName="DetailsForm" Model="DetailsForm" OnValidSubmit="OnValidSubmit" novalidate>
+    <EditForm class="form-basicinfo form" method="post" FormName="ProfileDetails" Model="DetailsForm" OnValidSubmit="OnValidSubmit" novalidate>
         <DataAnnotationsValidator />
         <div class="name">
             <div class="first-name">
@@ -105,8 +105,8 @@
     [SupplyParameterFromQuery]
     public string statusMessage { get; set; } = "";
 
-    [SupplyParameterFromForm]
-    private AccountDetailsForm DetailsForm { get; set; } = new();
+    [SupplyParameterFromForm(FormName = "ProfileDetails")]
+    private AccountDetailsForm? DetailsForm { get; set; }
 
     private void ClearForm() => DetailsForm = new();
 
@@ -154,7 +154,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-       
+        DetailsForm ??= new();
+
             await LoadUserDataAsync();
         
        
