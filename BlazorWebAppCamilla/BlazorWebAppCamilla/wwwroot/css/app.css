@@ -1358,7 +1358,6 @@ header .container .show ul .profile img:hover {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  height: 100%;
 }
 @media (min-width: 992px) {
   .account-details .container .user .btn-user {
@@ -1373,7 +1372,6 @@ header .container .show ul .profile img:hover {
   color: var(--color-gray-900);
   border: 1px solid transparent;
   box-sizing: border-box;
-  height: 100%;
 }
 .account-details .container .user .btn-user .button:hover {
   border: 1px solid var(--color-gray-700);
