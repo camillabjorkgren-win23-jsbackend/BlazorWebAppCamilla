@@ -25,7 +25,7 @@
         }
 
         <h1>Verify Your Account</h1>
-        <p>Didn't receive an email?<button @onclick="ResendCode">Resend Code</button></p>
+        <p>Didn't receive an email?</p><button @onclick="ResendCode" class="button btn">Resend Code</button>
 
         <EditForm class="form" novalidate FormName="VerifyCode" Model="VerifyCodeForm" asp-route-returnUrl="@ReturnUrl" OnValidSubmit="OnValidSubmit">
             <DataAnnotationsValidator />
