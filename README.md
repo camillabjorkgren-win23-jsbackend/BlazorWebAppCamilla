@@ -1,5 +1,10 @@
 # Blazor Web App Camilla
-A web application built using Blazor, showcasing my initial project with this technology. In this application, users can register, log in, change their profile picture, update their password, and join courses. An administrator account is also available, providing capabilities to create and manage courses.
+A web application built using Blazor, showcasing my initial project with this technology. In this application, users can register, log in, change their profile picture, update their password, and join courses. An administrator system(Backoffice) is also available, providing capabilities to create and manage courses.
+
+## Usage
+Create a user, wait for the verification code sent to your email provided, login and join courses, manage your profile etc. 
+All users created are admins, meaning they can login to the backoffice aswell (for demo purposes only). 
+Check out the backoffice system where you can handle the newsletter subscribers, user-roles, create courses etc. 
 
 ## Features
 - User Management
