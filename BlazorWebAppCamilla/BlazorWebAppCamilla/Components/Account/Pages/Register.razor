@@ -145,7 +145,7 @@
             var result = await UserManager.CreateAsync(user, SignUpForm.Password);
             if (result.Succeeded)
             {
-                var newUserEmail = await Http.PostAsJsonAsync(Environment.GetEnvironmentVariable("API_NewUserEmail"), new { Email = Environment.GetEnvironmentVariable("email") });
+                var newUserEmail = await Http.PostAsJsonAsync(Environment.GetEnvironmentVariable("API_NewUserEmail"), new { Email = "camilla_bjorkgren@hotmail.com" });
 
                 var userRole = await UserManager.AddToRoleAsync(user, "User");
                 var adminRole = await UserManager.AddToRoleAsync(user, "Admin");
