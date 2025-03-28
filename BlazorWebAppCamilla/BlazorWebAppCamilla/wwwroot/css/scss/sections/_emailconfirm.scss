@@ -1,0 +1,23 @@
+﻿.emailconfirm {
+
+    .container {
+        .flex {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+
+            .button {
+                background-color: var(--color-theme);
+                color: var(--color-white);
+                padding: 10px 20px;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+
+                &:hover {
+                    background-color: var(--color-theme-dark);
+                }
+            }
+        }
+    }
+}

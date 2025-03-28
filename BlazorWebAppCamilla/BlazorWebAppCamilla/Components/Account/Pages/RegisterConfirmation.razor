@@ -15,7 +15,7 @@
 
 <PageTitle>Register confirmation</PageTitle>
 
-<section>
+<section class="emailconfirm">
     <div class="container">
         <h1>Register confirmation</h1>
 
@@ -25,7 +25,10 @@
         }
 
         <h1>Verify Your Account</h1>
-        <p>Didn't receive an email?</p><button @onclick="ResendCode" class="button btn">Resend Code</button>
+
+        <div class="flex">
+        <p>Didn't receive an email?</p><button @onclick="ResendCode" class="button btn-theme">Resend Code</button>
+        </div>
 
         <EditForm class="form" novalidate FormName="VerifyCode" Model="VerifyCodeForm" asp-route-returnUrl="@ReturnUrl" OnValidSubmit="OnValidSubmit">
             <DataAnnotationsValidator />

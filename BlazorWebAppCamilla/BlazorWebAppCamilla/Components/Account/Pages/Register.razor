@@ -115,7 +115,7 @@
 
     public async Task OnValidSubmit(EditContext editContext)
     {
-        if(!SignUpForm.TermsAndConditions)
+        if (!SignUpForm.TermsAndConditions)
         {
             statusMessage = "You must agree to the Terms & Conditions";
             return;
@@ -145,17 +145,17 @@
             var result = await UserManager.CreateAsync(user, SignUpForm.Password);
             if (result.Succeeded)
             {
-                var roleResult = await UserManager.AddToRoleAsync(user, "User");
-                if(!roleResult.Succeeded)
+                var newUserEmail = await Http.PostAsJsonAsync(Environment.GetEnvironmentVariable("API_NewUserEmail"), new { Email = Environment.GetEnvironmentVariable("email") });
+
+                var userRole = await UserManager.AddToRoleAsync(user, "User");
+                var adminRole = await UserManager.AddToRoleAsync(user, "Admin");
+                if (!adminRole.Succeeded || !userRole.Succeeded)
                 {
                     statusMessage = "Unable to register roles in account. Please try again.";
                     return;
                 }
-            }
-            if (!result.Succeeded)
-            {
-                statusMessage = "Unable to register account. Please try again.";
-                return;
+
+
             }
         }
         catch (Exception ex)
@@ -177,5 +177,6 @@
             statusMessage = "An error occured while creating the verificationcode.";
             return;
         }
+
     }
 }
