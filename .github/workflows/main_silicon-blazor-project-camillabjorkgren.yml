@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - Blazor-Silicon-CamillaBjorkgren
+name: Build and deploy ASP.Net Core app to Azure Web App - Silicon-Blazor-Project-CamillaBjorkgren
 
 on:
   push:
@@ -54,15 +54,15 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C0D8DAD020AB4A4BA3B4C13EB1393D5C }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2A129500CD8E4EF88D85390912F74332 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4B8EFECF2F3D44C5B4885B06DDE0171F }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_0C0EA204C80E4447A4E2B756C5CFD116 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_8BFBB5C6A86B4035B9FA4E46433651C7 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_0C6944A5A4D743D4A255DDD9CE7D6379 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'Blazor-Silicon-CamillaBjorkgren'
+          app-name: 'Silicon-Blazor-Project-CamillaBjorkgren'
           slot-name: 'Production'
           package: .
           
