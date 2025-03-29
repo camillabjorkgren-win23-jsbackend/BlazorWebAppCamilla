@@ -6,10 +6,13 @@
 
 @inject CourseService CourseService
 @inject UserDataService UserDataService
-
-@if (course == null)
+@if (isLoading)
 {
     <p>Loading...</p>
+}
+else if (course == null)
+{
+    <p>Course not found</p>
 }
 else
 {
@@ -24,7 +27,7 @@ else
             }
             <div class="text-header">
                 <div class="bread-crumbs">
-                    <a href="/"><i class="fa-light fa-house"></i>Home</a>
+                    <a href="/"><i class="fa-solid fa-house"></i>Home</a>
                     <i class="fa-solid fa-angles-right"></i>
                     <a href="/courses">Courses</a>
                     <i class="fa-solid fa-angles-right"></i>
@@ -150,6 +153,9 @@ else
 }
 
 @code {
+     private bool isLoading = true;
+
+
     [Parameter]
     public string? courseId { get; set; }
 
@@ -179,6 +185,10 @@ else
         try
         {
             course = await CourseService.GetCourseByIdAsync(courseId);
+            if (course != null)
+            {
+                isLoading = false;
+            }
         }
         catch (Exception)
         {

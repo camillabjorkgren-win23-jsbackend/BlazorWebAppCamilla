@@ -7,12 +7,12 @@
             <nav>
                 <NavLink class="menu-link" href="/">Overview</NavLink>
                 <NavLink class="menu-link" href="/#features">Features</NavLink>
-                <a href="" class="menu-link">Silicon Backoffice</a>
                 <AuthorizeView>
                     <Authorized>
                         <NavLink class="menu-link" href="/courses">Courses</NavLink>
-                    </Authorized>             
+                    </Authorized>
                 </AuthorizeView>
+                <a href="silicon-blazor-backoffice-camillabjorkgren-edb2bccybqgjdnc2.swedencentral-01.azurewebsites.net" target="_blank" class="menu-link">Silicon Backoffice</a>
             </nav>
         </div>
 
@@ -56,10 +56,10 @@
                     <Authorized>
                         <li><NavLink href="/Courses">Courses</NavLink></li>
                         <li class="profile">
-                        <div class="image">
+                            <div class="image">
                                 <NavLink href="/account"><img src="/images/profile-image.svg" alt="Profile image" /></NavLink>
                             </div>
-                    </li>
+                        </li>
                     </Authorized>
                 </AuthorizeView>
             </ul>
@@ -74,5 +74,5 @@
 @code {
     [Parameter]
     public ApplicationUser User { get; set; }
-  
+
 }
