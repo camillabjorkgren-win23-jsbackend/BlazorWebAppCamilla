@@ -6,6 +6,10 @@ Create a user, wait for the verification code sent to your email provided, login
 All users created are admins, meaning they can login to the backoffice aswell (for demo purposes only). 
 Check out the backoffice system where you can handle the newsletter subscribers, user-roles, create courses etc. 
 
+## Challenges
+I've had some challenges regarding blazors component rendering and the cascading parameters. There are some improvments to be made in design, rendering smoothness, toasts or statusmessages for better user-experience etc.  
+
+
 ## Features
 - User Management
 - Create a new account (registration)
